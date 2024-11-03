@@ -6,7 +6,7 @@ import {useAuth, useShoppingList} from "../../../contexts";
 import {TUser} from "../../../types/auth.ts";
 import {users} from "../../../data/users.ts";
 import {Input} from "@ParkComponents/ui/Input.tsx";
-import {Delete02Icon, Tick02Icon} from "hugeicons-react";
+import {Delete02Icon, PencilEdit01Icon, Tick02Icon} from "hugeicons-react";
 
 interface ShoppingListItemProps extends HstackProps {
     item?: ShoppingListItemType;
@@ -16,7 +16,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
     const [isEditMode, setEditMode] = useState<boolean>(false);
     const [form, setForm] = useState<{amount: string, name: string}>({amount: '', name: ''});
 
-    const { toggleItem, saveItem } = useShoppingList();
+    const { toggleItem, saveItem, removeItem } = useShoppingList();
     const { user } = useAuth();
 
     useEffect(() => {
@@ -75,9 +75,19 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
                 {item.name}
             </Text>
         </HStack>
-        {completedByUser !== undefined
-            ? <Text>Dokončil: {completedByUser.name}</Text>
-            : undefined
-        }
+        <HStack gap={2}>
+            {completedByUser !== undefined
+                ? <Text>Dokončil: {completedByUser.name}</Text>
+                : <>
+                    <Button p={0} variant={'subtle'} onClick={() => setEditMode(true)}>
+                        <PencilEdit01Icon strokeWidth={2} />
+                    </Button>
+                    <Button p={0} variant={'subtle'} onClick={() => removeItem(item.id)} colorPalette={'red'}>
+                        <Delete02Icon strokeWidth={2} />
+                    </Button>
+                </>
+            }
+        </HStack>
+
     </HStack>
 }
