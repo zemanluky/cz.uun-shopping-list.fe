@@ -2,12 +2,15 @@ import * as React from 'react';
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {ShoppingList, ShoppingListItem} from "../types/shopping-list.ts";
 import {useShoppingLists} from "./ShoppingListsContext.tsx";
+import {TUser} from "../types/auth.ts";
+import {DateTime} from "luxon";
 
 interface ShoppingListContextType {
     shoppingList: ShoppingList|null;
     setShoppingList: (id: number|null) => void;
     items: Array<ShoppingListItem>|null;
     saveItem: (item: ShoppingListItem) => void;
+    toggleItem: (id: number, user: TUser) => void;
     removeItem: (id: number) => void;
     addMember: (id: number) => void;
     removeMember: (id: number) => void;
@@ -27,7 +30,7 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
     const items = useMemo<Array<ShoppingListItem>|null>(() => {
         if (!shoppingList) return null;
         return shoppingList.items;
-    }, [shoppingList]);
+    }, [shoppingListId, shoppingLists, shoppingList]);
 
     /**
      * Adds or updates item to the current shopping list.
@@ -49,6 +52,32 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
     }
 
     /**
+     * Toggles completeness of a given item.
+     * @param id
+     * @param user
+     */
+    const toggleItem = (id: number, user: TUser): void => {
+        if (!shoppingList || !items) return;
+
+        const newItems = items.map(item => {
+            if (item.id === id) {
+                if (item.completed_at === null) {
+                    item.completed_at = DateTime.now();
+                    item.completed_by = user.id;
+                }
+                else {
+                    item.completed_at = null;
+                    item.completed_by = null;
+                }
+            }
+
+            return item;
+        });
+
+        saveShoppingList({ ...shoppingList, items: newItems }, shoppingList.id);
+    }
+
+    /**
      * Adds a member to the current shopping list.
      * NOTE: This logic will probably be handled via API mutations in the future, rather than here.
      * @param id
@@ -60,7 +89,10 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
         // however, in the future, when we connect this app to BE, it will be verified on the BE, rather than here...
         // because of that, the only place where we verify this condition is in the UI (only the author will see the 'add member' button)
 
+        const set = new Set(shoppingList.members);
+        set.add(id);
 
+        saveShoppingList({ ...shoppingList, members: Array.from(set.values()) }, shoppingList.id);
     }
 
     /**
@@ -71,20 +103,23 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
     const removeMember = (id: number): void => {
         if (!shoppingList) return;
 
+        const set = new Set(shoppingList.members);
+        set.delete(id);
 
+        saveShoppingList({ ...shoppingList, members: Array.from(set.values()) }, shoppingList.id);
     }
 
     return <ShoppingListContext.Provider value={{
         shoppingList, items,
-        saveItem, removeItem,
         addMember, removeMember,
+        saveItem, removeItem, toggleItem,
         setShoppingList: (id: number|null) => setShoppingListId(id)
     }}>
         {children}
     </ShoppingListContext.Provider>;
 };
 
-export const useShoppingList = (id: number): ShoppingListContextType => {
+export const useShoppingList = (id?: number): ShoppingListContextType => {
     const ctx = useContext(ShoppingListContext);
 
     if (!ctx)
@@ -94,9 +129,11 @@ export const useShoppingList = (id: number): ShoppingListContextType => {
         );
 
     useEffect(() => {
-        ctx.setShoppingList(id);
+        if (id !== undefined) ctx.setShoppingList(id);
 
-        return () => ctx.setShoppingList(null);
+        return () => {
+            if (id !== undefined) ctx.setShoppingList(null);
+        }
     }, [id]);
 
     return ctx;

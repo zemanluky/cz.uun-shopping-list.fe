@@ -1,19 +1,37 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {ShoppingListItem as ShoppingListItemType} from "../../../types/shopping-list.ts";
-import {Box, HStack} from "../../../../styled-system/jsx";
-import {Text} from "@ParkComponents/ui";
-import {Checkbox} from "@ParkComponents/ui/Checkbox.tsx";
+import {Box, HStack, HstackProps} from "../../../../styled-system/jsx";
+import {Text, Code, Checkbox} from "@ParkComponents/ui";
+import {useAuth, useShoppingList} from "../../../contexts";
+import {TUser} from "../../../types/auth.ts";
+import {users} from "../../../data/users.ts";
 
-interface ShoppingListItemProps {
+interface ShoppingListItemProps extends HstackProps {
     item: ShoppingListItemType;
 }
 
-export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...boxProps}) => {
-    return <Box p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} {...boxProps}>
+export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hstackProps}) => {
+    const { toggleItem } = useShoppingList();
+    const { user } = useAuth();
+
+    const completedByUser = useMemo(
+        () => users.find(u => u.id === item.completed_by),
+        [item.completed_by]
+    );
+
+    return <HStack {...hstackProps} p={4} bg={item.completed_at !== null ? "bg.emphasized" : "bg.subtle"}
+                   shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
+    >
         <HStack gap={4}>
-            <Checkbox checked={item.completed_at !== null}/>
-            <Text fontWeight='semibold'>{item.amount}</Text>
-            <Text fontWeight='semibold'>{item.name}</Text>
+            <Checkbox checked={item.completed_at !== null} onCheckedChange={() => toggleItem(item.id, user as TUser)} />
+            <Text>
+                <Code fontWeight='semibold' px={2} mr={2}>{item.amount}</Code>
+                {item.name}
+            </Text>
         </HStack>
-    </Box>
+        {completedByUser !== undefined
+            ? <Text>Dokončil: {completedByUser.name}</Text>
+            : undefined
+        }
+    </HStack>
 }

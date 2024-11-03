@@ -36,7 +36,7 @@ export const ShoppingListsProvider: React.FC<{children: React.ReactNode}> = ({ c
         const index = getShoppingListIndex(id);
 
         // we did not find the index, let's create the entry instead
-        if (!index) {
+        if (index === -1) {
             setShoppingLists(prev => [...prev, updatedList]);
             return;
         }
