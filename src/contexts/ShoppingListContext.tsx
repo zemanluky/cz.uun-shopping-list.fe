@@ -9,7 +9,7 @@ interface ShoppingListContextType {
     shoppingList: ShoppingList|null;
     setShoppingList: (id: number|null) => void;
     items: Array<ShoppingListItem>|null;
-    saveItem: (item: ShoppingListItem) => void;
+    saveItem: (item: Omit<ShoppingListItem, 'id'>, id?: number|null) => void;
     toggleItem: (id: number, user: TUser) => void;
     removeItem: (id: number) => void;
     addMember: (id: number) => void;
@@ -32,15 +32,46 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
         return shoppingList.items;
     }, [shoppingListId, shoppingLists, shoppingList]);
 
+    /** Helper function to retrieve index in the mock array. */
+    const getShoppingListItemIndex = (id: number) => items?.findIndex(item => item.id === id);
+
     /**
      * Adds or updates item to the current shopping list.
-     * @param item
+     * @param data
+     * @param id
      */
-    const saveItem = (item: ShoppingListItem): void => {
-        if (!shoppingListId) {
-            console.error('Cannot save a ');
+    const saveItem = (data: Pick<ShoppingListItem, 'name'|'amount'>, id: number|null = null): void => {
+        if (!shoppingList || !items) return;
+
+        // creating new item
+        if (id === null) {
+            const lastId = Math.max(...items.map(sl => sl.id));
+            const newItem: ShoppingListItem = { id: lastId + 1, completed_at: null, completed_by: null, ...data };
+
+            saveShoppingList({ ...shoppingList, items: [...items, newItem]}, shoppingList.id);
             return;
         }
+
+        const foundIndex = getShoppingListItemIndex(id);
+
+        // we did not find the index, let's create the entry instead
+        if (foundIndex === -1) {
+            saveItem(data);
+            return;
+        }
+
+        saveShoppingList(
+            {
+                ...shoppingList,
+                items: items.map((item, i) => {
+                    if (foundIndex === i)
+                        return {...item, amount: data.amount, name: data.name};
+
+                    return item;
+                })
+            },
+            shoppingList.id
+        );
     }
 
     /**
@@ -48,7 +79,9 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
      * @param id
      */
     const removeItem = (id: number): void => {
+        if (!shoppingList || !items) return;
 
+        saveShoppingList({ ...shoppingList, items: items.filter(item => item.id !== id)}, shoppingList.id);
     }
 
     /**

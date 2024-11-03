@@ -12,6 +12,7 @@ export const ShoppingListItems: React.FC<ShoppingListItemsProps> = ({items, ...b
     return <Box {...boxProps}>
         <Heading as={'h3'} fontSize={'2xl'} fontWeight={'bold'} display={'block'} mb={'4'}>Položky</Heading>
         <VStack gap={2}>
+            <ShoppingListItem/>
             {items.map(item => <ShoppingListItem key={item.id} item={item} />)}
         </VStack>
     </Box>

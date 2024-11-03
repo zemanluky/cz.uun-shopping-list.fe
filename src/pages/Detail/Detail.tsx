@@ -12,7 +12,7 @@ import {ConfirmationDialog} from "@Components/ui/ConfirmationDialog.tsx";
 import {InformationRow} from "@Components/ui/InformationRow.tsx";
 import {useMemo} from "react";
 import {users} from "../../data/users.ts";
-import {MemberList} from "@Components/features/Member/MemberList.tsx";
+import {MemberList} from "@Components/features/MemberList/MemberList.tsx";
 import {ShoppingListItems} from "@Components/features/ShoppingList/ShoppingListItems.tsx";
 
 interface DetailProps {
@@ -33,7 +33,7 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
     const itemCount = useMemo(() => ({
         total: shoppingList?.items.length,
         completed: shoppingList?.items.filter(i => i.completed_at !== null).length
-    }), [shoppingList]);
+    }), [shoppingList?.items]);
 
     if (!shoppingList) return <></>;
 
@@ -74,7 +74,8 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
                         icon={<CalendarSetting01Icon size={28} strokeWidth={2}/>}
                     />
                     <InformationRow
-                        title='Počet položek / hotové položky' data={`${itemCount.total} položek / ${itemCount.completed} hotových položek`}
+                        title='Počet položek / hotové položky'
+                        data={`${itemCount.total} položek / ${itemCount.completed} hotových položek`}
                         icon={<CheckListIcon size={28} strokeWidth={2}/>}
                     />
                     <InformationRow

@@ -2,7 +2,7 @@ import React from "react";
 import {TUser} from "../../../types/auth.ts";
 import {Box, BoxProps, VStack} from "../../../../styled-system/jsx";
 import {Heading, Text} from "@ParkComponents/ui";
-import {MemberListItem} from "@Components/features/Member/MemberListItem.tsx";
+import {MemberListItem} from "@Components/features/MemberList/MemberListItem.tsx";
 
 interface MemberListProps extends BoxProps {
     members: Array<TUser>
