@@ -9,6 +9,8 @@ interface ShoppingListItemsProps extends BoxProps {
 }
 
 export const ShoppingListItems: React.FC<ShoppingListItemsProps> = ({items, ...boxProps}) => {
+
+
     return <Box {...boxProps}>
         <Heading as={'h3'} fontSize={'2xl'} fontWeight={'bold'} display={'block'} mb={'4'}>Položky</Heading>
         <VStack gap={2}>

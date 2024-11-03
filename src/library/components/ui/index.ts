@@ -6,3 +6,4 @@ export * from "./Spinner.tsx";
 export * from "./Dialog.tsx";
 export * from "./Code.tsx";
 export * from "./Checkbox.tsx";
+export * from "./Select.tsx";

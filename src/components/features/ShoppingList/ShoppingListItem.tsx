@@ -60,7 +60,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
                 <Input id={'createItemAmount'} placeholder={'Množství'} size={'sm'} value={form.amount} onChange={(e) => updateFormField('amount', e.target.value)} />
                 <Input id={'createItemName'} placeholder={'Název'} size={'sm'} value={form.name} onChange={(e) => updateFormField('name', e.target.value)}/>
             </HStack>
-            <Button p={0} onClick={() => save()}>
+            <Button p={0} onClick={() => save()} disabled={form.name.length === 0 || form.amount.length === 0}>
                 <Tick02Icon strokeWidth={2} />
             </Button>
         </HStack>;
