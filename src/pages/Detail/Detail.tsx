@@ -75,6 +75,8 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
     if (!user || (shoppingList.author_id !== user.id && !shoppingList.members.includes(user.id)))
         return <Navigate to='/' />
 
+    console.log(shoppingList);
+
     return (<>
         <PageHeader
             title={shoppingList.name}
