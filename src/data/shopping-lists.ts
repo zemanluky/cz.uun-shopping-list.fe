@@ -4,7 +4,7 @@ import {DateTime} from "luxon";
 export const shoppingLists: Array<ShoppingList> = [
     {
         id: 1,
-        name: "První nákupní seznam",
+        name: "Mexico 🌮",
         author_id: 1,
         complete_by: DateTime.fromISO('2024-11-04'),
         completed_at: null,
@@ -20,7 +20,7 @@ export const shoppingLists: Array<ShoppingList> = [
             },
             {
                 id: 2,
-                name: "Salsa spicy",
+                name: "Spicy salsa",
                 amount: "2x",
                 completed_at: null,
                 completed_by: null
@@ -51,7 +51,7 @@ export const shoppingLists: Array<ShoppingList> = [
     },
     {
         id: 2,
-        name: "Druhý nákupní seznam",
+        name: "Caesar salát",
         author_id: 1,
         complete_by:  DateTime.fromISO('2024-11-05'),
         completed_at: null,
@@ -60,36 +60,36 @@ export const shoppingLists: Array<ShoppingList> = [
         items: [
             {
                 id: 1,
-                name: "Tortilly",
-                amount: "6 ks",
+                name: "Kuřecí",
+                amount: "500g",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 2,
-                name: "",
+                name: "Little gem salát",
                 amount: "2x",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 3,
-                name: "Sýrová omáčka",
-                amount: "2x",
+                name: "Caesar zálivka",
+                amount: "1",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 4,
-                name: "Popcorn",
-                amount: "4 sáčky",
+                name: "Krutony",
+                amount: "2 sáčky",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 5,
-                name: "Hrozny",
-                amount: "500g",
+                name: "Parmazán",
+                amount: "Jeden bloček",
                 completed_at: null,
                 completed_by: null
             }
@@ -97,8 +97,8 @@ export const shoppingLists: Array<ShoppingList> = [
         members: [2, 3]
     },
     {
-        id: 4,
-        name: "Třetí nákupní seznam",
+        id: 3,
+        name: "Mekáč",
         author_id: 2,
         complete_by: DateTime.fromISO('2024-11-07'),
         completed_at: null,
@@ -107,39 +107,32 @@ export const shoppingLists: Array<ShoppingList> = [
         items: [
             {
                 id: 1,
-                name: "Tortilly",
-                amount: "6 ks",
+                name: "Telefon 📱",
+                amount: "1",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 2,
-                name: "",
-                amount: "2x",
+                name: "Wolt 💿",
+                amount: "1",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 3,
-                name: "Sýrová omáčka",
-                amount: "2x",
+                name: "Kurýr/ka 🧑",
+                amount: "1",
                 completed_at: null,
                 completed_by: null
             },
             {
                 id: 4,
-                name: "Popcorn",
-                amount: "4 sáčky",
+                name: "Auto 🚗",
+                amount: "1",
                 completed_at: null,
                 completed_by: null
             },
-            {
-                id: 5,
-                name: "Hrozny",
-                amount: "500g",
-                completed_at: null,
-                completed_by: null
-            }
         ],
         members: [3]
     }
