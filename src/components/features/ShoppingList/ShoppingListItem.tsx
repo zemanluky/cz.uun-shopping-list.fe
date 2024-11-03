@@ -55,7 +55,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
         setForm({amount: '', name: ''});
     }
 
-    const handleKeySave = (e: KeyboardEvent): void => {
+    const handleKeySave = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') save();
     }
 
