@@ -30,7 +30,7 @@ export type MenuItem = | MenuSeparator | FinalMenuItem | NestedMenuItem;
 
 export interface MenuProps {
     items: Array<MenuItem>,
-    trigger?: React.ReactNode
+    trigger: React.ReactNode
 }
 
 export const Menu: React.FC<MenuProps> = ({items, trigger}) => {

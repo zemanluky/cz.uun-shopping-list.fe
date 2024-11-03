@@ -38,6 +38,8 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
     }
 
     const save = (): void => {
+        if (form.name.length === 0 || form.amount.length === 0) return;
+
         if (item) {
             saveItem({...item, name: form.name, amount: form.amount}, item.id);
             setEditMode(false);
@@ -53,12 +55,22 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
         setForm({amount: '', name: ''});
     }
 
+    const handleKeySave = (e: KeyboardEvent): void => {
+        if (e.key === 'Enter') save();
+    }
+
     if (!item || isEditMode)
         return <HStack {...hstackProps} p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}>
             <HStack gap={4}>
                 <Checkbox checked={false} disabled />
-                <Input id={'createItemAmount'} placeholder={'Množství'} size={'sm'} value={form.amount} onChange={(e) => updateFormField('amount', e.target.value)} />
-                <Input id={'createItemName'} placeholder={'Název'} size={'sm'} value={form.name} onChange={(e) => updateFormField('name', e.target.value)}/>
+                <Input id={'createItemAmount'} placeholder={'Množství'} size={'sm'} value={form.amount}
+                       onChange={(e) => updateFormField('amount', e.target.value)}
+                       onKeyDown={handleKeySave}
+                />
+                <Input id={'createItemName'} placeholder={'Název'} size={'sm'} value={form.name}
+                       onChange={(e) => updateFormField('name', e.target.value)}
+                       onKeyDown={handleKeySave}
+                />
             </HStack>
             <Button p={0} onClick={() => save()} disabled={form.name.length === 0 || form.amount.length === 0}>
                 <Tick02Icon strokeWidth={2} />

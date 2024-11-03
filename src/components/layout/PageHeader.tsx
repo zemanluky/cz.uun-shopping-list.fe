@@ -23,7 +23,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, acti
                 </Button>}
                 <Heading as='h1' size='5xl' fontWeight='extrabold' lineHeight={1} color='accent.12'>{title}</Heading>
             </HStack>
-            {actions || <></>}
+            <HStack alignItems='center' gap='2'>
+                {actions || <></>}
+            </HStack>
         </Container>
     </Box>
 }
