@@ -81,7 +81,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
                    shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
     >
         <HStack gap={4}>
-            <Checkbox checked={item.completed_at !== null} onCheckedChange={() => toggleItem(item.id, user as TUser)} />
+            <Checkbox checked={item.completed_at !== null} onClick={() => toggleItem(item.id, user as TUser)} />
             <Text>
                 <Code fontWeight='semibold' px={2} mr={2}>{item.amount}</Code>
                 {item.name}
