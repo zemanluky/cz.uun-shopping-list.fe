@@ -21,7 +21,17 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": "."
+
+    // additional config
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+
+    "paths": {
+      "@ParkComponents/*": ["./src/library/components/*"],
+      "@Components/*": ["./src/components/*"],
+      "@Pages/*": ["./src/pages/*"]
+    }
   },
   "include": ["src", "styled-system"]
 }

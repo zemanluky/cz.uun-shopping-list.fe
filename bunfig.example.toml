@@ -1,0 +1,2 @@
+[install.scopes]
+@hugeicons = { token = "YOUR_NPM_TOKEN", url = "https://npm.hugeicons.com/" }
