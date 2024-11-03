@@ -1,14 +1,15 @@
 import {ShoppingList} from "../types/shopping-list.ts";
+import {DateTime} from "luxon";
 
 export const shoppingLists: Array<ShoppingList> = [
     {
         id: 1,
         name: "První nákupní seznam",
         author_id: 1,
-        complete_by: new Date('2024-11-04'),
+        complete_by: DateTime.fromISO('2024-11-04'),
         completed_at: null,
         completed_by: null,
-        last_updated: new Date('2024-10-31T17:24:00'),
+        last_updated: DateTime.fromISO('2024-10-31T17:24:00'),
         items: [
             {
                 id: 1,
@@ -52,10 +53,10 @@ export const shoppingLists: Array<ShoppingList> = [
         id: 2,
         name: "Druhý nákupní seznam",
         author_id: 1,
-        complete_by:  new Date('2024-11-05'),
+        complete_by:  DateTime.fromISO('2024-11-05'),
         completed_at: null,
         completed_by: null,
-        last_updated: new Date('2024-11-01T15:14:00'),
+        last_updated: DateTime.fromISO('2024-11-01T15:14:00'),
         items: [
             {
                 id: 1,
@@ -99,10 +100,10 @@ export const shoppingLists: Array<ShoppingList> = [
         id: 4,
         name: "Třetí nákupní seznam",
         author_id: 2,
-        complete_by:  new Date('2024-11-07'),
+        complete_by: DateTime.fromISO('2024-11-07'),
         completed_at: null,
         completed_by: null,
-        last_updated: new Date('2024-10-28T15:14:00'),
+        last_updated: DateTime.fromISO('2024-10-28T15:14:00'),
         items: [
             {
                 id: 1,

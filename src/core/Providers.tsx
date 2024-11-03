@@ -1,11 +1,13 @@
 import * as React from "react";
 import {ReactNode} from "react";
-import {AuthProvider} from "../contexts/AuthContext.tsx";
+import {AuthProvider, ShoppingListsProvider} from "../contexts";
 
 export const Providers: React.FC<{children?: ReactNode}> = ({children}) => {
     return (
         <AuthProvider>
-            {children}
+            <ShoppingListsProvider>
+                {children}
+            </ShoppingListsProvider>
         </AuthProvider>
     );
 }

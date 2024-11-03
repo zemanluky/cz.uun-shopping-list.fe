@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {Providers} from "./Providers.tsx";
 import {Router} from "./Router.tsx";
-import {Navbar} from "../components/layout";
 import {css} from "../../styled-system/css";
 
 const appStyles = css({
@@ -15,7 +14,6 @@ export const App: React.FC = () => {
   return (
       <Providers>
           <div className={appStyles}>
-              <Navbar />
               <Router />
           </div>
       </Providers>

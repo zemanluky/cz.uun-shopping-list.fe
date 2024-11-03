@@ -1,17 +1,24 @@
 import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
-import {Homepage} from "../pages/Homepage/Homepage.tsx";
-import {Detail} from "../pages/Detail/Detail.tsx";
+import {Homepage} from "@Pages/Home/Home.tsx";
 import * as React from "react";
+import {DetailPage} from "@Pages/Detail/DetailPage.tsx";
+import {PageWrapper} from "@Components/layout/PageWrapper.tsx";
 
 const routes: RouteObject[] = [
     {
         path: '/',
-        element: <Homepage/>
+        element: <PageWrapper/>,
+        children: [
+            {
+                path: '',
+                element: <Homepage/>
+            },
+            {
+                path: ':id',
+                element: <DetailPage/>
+            }
+        ]
     },
-    {
-        path: '/:id',
-        element: <Detail/>
-    }
 ];
 const router = createBrowserRouter(routes);
 

@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {useAuth} from "../../contexts/AuthContext.tsx";
+import {useAuth} from "../../contexts";
 import {Heading} from "@ParkComponents/ui/Heading.tsx";
 import {Text} from "@ParkComponents/ui/Text.tsx";
 import {Button} from "@ParkComponents/ui/Button.tsx";
@@ -7,6 +7,7 @@ import {css} from "../../../styled-system/css";
 import {Container, HStack} from "../../../styled-system/jsx";
 import {Menu, MenuItem} from "@Components/ui/Menu.tsx";
 import {users} from "../../data/users.ts";
+import {Link} from "react-router-dom";
 
 const navbarStyles = css({
     py: '4',
@@ -31,7 +32,9 @@ export const Navbar: React.FC = () => {
     return (
         <div className={navbarStyles}>
             <Container display='flex' justifyContent='space-between' alignItems='center' maxW='6xl'>
-                <Heading size='2xl' fontWeight={"bold"}>Nákupák</Heading>
+                <Link to={'/'}>
+                    <Heading size='2xl' fontWeight={"bold"}>Nákupák</Heading>
+                </Link>
                 {isAuthenticated && user
                     ? <HStack gap='4'>
                         <Text as={"span"}>Ahoj, {user.name}!</Text>

@@ -7,13 +7,13 @@ import {AddCircleIcon} from "hugeicons-react";
 import {useAuth} from "../../contexts/AuthContext.tsx";
 import {Text} from "@ParkComponents/ui";
 import {useMemo} from "react";
-import {shoppingLists} from "../../data/shopping-lists.ts";
-import {ShoppingList} from "../../types/shopping-list.ts";
+import {useShoppingLists} from "../../contexts/ShoppingListsContext.tsx";
 
 export const Homepage: React.FC = () => {
     const {isAuthenticated, user} = useAuth();
+    const {shoppingLists} = useShoppingLists();
 
-    const usersItems = useMemo<Array<ShoppingList>>(
+    const usersItems = useMemo(
         () => shoppingLists.filter(listItem => user && (listItem.author_id === user.id || listItem.members.includes(user.id))),
         [shoppingLists, user]
     );
