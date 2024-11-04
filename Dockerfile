@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY bun.lockb .
 COPY package.json .
+COPY panda.config.ts .
 
 RUN bun install --frozen-lockfile
 
