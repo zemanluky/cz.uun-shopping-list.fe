@@ -6,14 +6,15 @@ import {MemberListItem} from "@Components/features/MemberList/MemberListItem.tsx
 import {AddMemberModal} from "@Components/features/MemberList/AddMemberModal.tsx";
 
 interface MemberListProps extends BoxProps {
-    members: Array<TUser>
+    members: Array<TUser>,
+    showAddModal?: boolean
 }
 
-export const MemberList: React.FC<MemberListProps> = ({members, ...boxProps}) => {
+export const MemberList: React.FC<MemberListProps> = ({members, showAddModal = false, ...boxProps}) => {
     return <Box {...boxProps}>
         <HStack justifyContent={'space-between'} mb={'4'}>
             <Heading as={'h3'} fontSize={'2xl'} fontWeight={'bold'} display={'block'}>Členové</Heading>
-            <AddMemberModal/>
+            {showAddModal && <AddMemberModal/>}
         </HStack>
         {members.length > 0
             ? <VStack gap={2}>

@@ -108,7 +108,7 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
             </Grid>
             <HStack gap='8' mt='8' alignItems='flex-start'>
                 <ShoppingListItems items={shoppingList.items} w={'2/3'}/>
-                <MemberList members={members} w={'1/3'}/>
+                <MemberList members={members} showAddModal={user.id === shoppingList.author_id} w={'1/3'}/>
             </HStack>
         </Container>
         <ShoppingListDetailModal ref={editModalRef}/>
