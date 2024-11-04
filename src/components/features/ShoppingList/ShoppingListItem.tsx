@@ -7,6 +7,7 @@ import {TUser} from "../../../types/auth.ts";
 import {users} from "../../../data/users.ts";
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {Delete02Icon, PencilEdit01Icon, Tick02Icon} from "hugeicons-react";
+import { Checkbox as ArkCheckbox } from "@ark-ui/react";
 
 interface ShoppingListItemProps extends HstackProps {
     item?: ShoppingListItemType;
@@ -14,6 +15,7 @@ interface ShoppingListItemProps extends HstackProps {
 
 export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hstackProps}) => {
     const [isEditMode, setEditMode] = useState<boolean>(false);
+    const [completed, setCompleted] = useState<ArkCheckbox.CheckedState>(false);
     const [form, setForm] = useState<{amount: string, name: string}>({amount: '', name: ''});
 
     const { toggleItem, saveItem, removeItem } = useShoppingList();
@@ -24,6 +26,12 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
             setForm({amount: item.amount, name: item.name});
         }
     }, [item]);
+
+    useEffect(() => {
+        if (item) {
+            setCompleted(item.completed_at !== null);
+        }
+    }, [item?.completed_at]);
 
     const completedByUser = useMemo(
         () => users.find(u => u.id === item?.completed_by),
@@ -59,15 +67,24 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
         if (e.key === 'Enter') save();
     }
 
+    const toggleComplete = (e: ArkCheckbox.CheckedChangeDetails): void => {
+        if (!item) return;
+
+        toggleItem(item.id, user as TUser);
+        setCompleted(e.checked);
+    }
+
     if (!item || isEditMode)
         return <HStack {...hstackProps} p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}>
             <HStack gap={4}>
-                <Checkbox checked={false} disabled />
-                <Input id={'createItemAmount'} placeholder={'Množství'} size={'sm'} value={form.amount}
+                {/* For some obscure reason when this checkbox is present at least once,
+                the other one becomes disabled as well and its state cannot be changed. */}
+                {/* <Checkbox value={} readOnly name={'create_item_completed'}/> */}
+                <Input id={'create_item_amount'} placeholder={'Množství'} size={'sm'} value={form.amount}
                        onChange={(e) => updateFormField('amount', e.target.value)}
                        onKeyDown={handleKeySave}
                 />
-                <Input id={'createItemName'} placeholder={'Název'} size={'sm'} value={form.name}
+                <Input id={'create_item_name'} placeholder={'Název'} size={'sm'} value={form.name}
                        onChange={(e) => updateFormField('name', e.target.value)}
                        onKeyDown={handleKeySave}
                 />
@@ -81,7 +98,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
                    shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
     >
         <HStack gap={4}>
-            <Checkbox checked={item.completed_at !== null} onClick={() => toggleItem(item.id, user as TUser)} />
+            <Checkbox checked={completed} onCheckedChange={toggleComplete} name={`item_${item.id}_completed`} />
             <Text>
                 <Code fontWeight='semibold' px={2} mr={2}>{item.amount}</Code>
                 {item.name}

@@ -14,7 +14,8 @@ const navbarStyles = css({
     shadow: 'xl',
     position: "sticky",
     top: '[0px]',
-    bg: 'bg.subtle'
+    bg: 'bg.subtle',
+    zIndex: 100
 });
 
 export const Navbar: React.FC = () => {

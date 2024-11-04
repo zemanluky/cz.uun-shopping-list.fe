@@ -95,13 +95,18 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
         const newItems = items.map(item => {
             if (item.id === id) {
                 if (item.completed_at === null) {
-                    item.completed_at = DateTime.now();
-                    item.completed_by = user.id;
+                    return {
+                        ...item,
+                        completed_by: user.id,
+                        completed_at: DateTime.now()
+                    };
                 }
-                else {
-                    item.completed_at = null;
-                    item.completed_by = null;
-                }
+
+                return {
+                    ...item,
+                    completed_by: null,
+                    completed_at: null
+                };
             }
 
             return item;
