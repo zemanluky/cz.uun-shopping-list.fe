@@ -1,4 +1,4 @@
-import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
+import {createHashRouter, RouteObject, RouterProvider} from "react-router-dom";
 import {Homepage} from "@Pages/Home/Home.tsx";
 import * as React from "react";
 import {DetailPage} from "@Pages/Detail/DetailPage.tsx";
@@ -20,6 +20,7 @@ const routes: RouteObject[] = [
         ]
     },
 ];
-const router = createBrowserRouter(routes);
+// using hash router because browser router does not work on github pages
+const router = createHashRouter(routes);
 
 export const Router: React.FC = () => <RouterProvider router={router} />
