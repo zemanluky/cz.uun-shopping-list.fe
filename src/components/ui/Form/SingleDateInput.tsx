@@ -8,7 +8,7 @@ import { Button } from "@ParkComponents/ui";
 import {parseISO} from "date-fns";
 
 interface IProps {
-    value: Date|undefined;
+    value: Date|undefined|null;
     onChange: (value: Date|null) => void;
 }
 

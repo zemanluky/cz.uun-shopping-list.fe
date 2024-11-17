@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react";
-import {Dialog} from "@Components/ui";
+import {Dialog} from "@Components/ui/Dialog";
 import {Divider, Grid, HStack, VStack} from "../../../../styled-system/jsx";
 import {Button, Heading, Text} from "@ParkComponents/ui";
 import {AddCircleIcon, Cancel01Icon} from "hugeicons-react";

@@ -1,10 +1,10 @@
 import React, {ReactNode, useMemo} from "react";
 import { Field as ParkField } from "@ParkComponents/ui/field";
 
-type TRenderType = 'input'|'textarea'|'select';
+type TRenderType = 'input'|'textarea'|'select'|'any';
 
 interface IProps {
-    label?: string,
+    label?: string|null,
     children: ReactNode,
     type?: TRenderType
     errors?: Array<string>
@@ -35,6 +35,9 @@ export const Field: React.FC<IProps> = ({label, errors, children, type}) => {
                     {children}
                 </ParkField.Textarea>
 
+            case 'any':
+                return children;
+
             case 'input':
             default:
                 return <ParkField.Input asChild>
@@ -44,7 +47,12 @@ export const Field: React.FC<IProps> = ({label, errors, children, type}) => {
     }
 
     return <ParkField.Root invalid={hasError}>
-        {label ? <ParkField.Label>{label}</ParkField.Label> : null}
+        {label !== null ? <ParkField.Label>
+            {label && label.length
+                ? label
+                : "\u00a0"
+            }
+        </ParkField.Label> : null}
         {renderControl()}
         {errorsComponent}
     </ParkField.Root>
