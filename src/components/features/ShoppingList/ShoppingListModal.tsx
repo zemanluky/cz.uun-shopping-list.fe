@@ -8,14 +8,15 @@ import {Field, SingleDateInput} from "@Components/ui/Form";
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {z} from "@Utils/zod.config.ts";
 import {css} from "../../../../styled-system/css";
+import { parseDate } from "@ark-ui/react";
 
 export interface IShoppingListModalRef {
     openModal: (shoppingList?: TShoppingList|null) => void;
 }
 
 interface IFormType {
-    name: string;
-    completeBy: Date;
+    name: string|null;
+    completeBy: Date|null;
 }
 
 export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
@@ -23,21 +24,19 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
         const formRef = useRef<FormInstance<IFormType>>(null);
         const [isOpen, setIsOpen] = useState<boolean>(false);
         const [shoppingList, setShoppingList] = useState<TShoppingList|null>(null);
+
         const { saveShoppingList } = useShoppingLists();
         const { user } = useAuth();
 
         useImperativeHandle(ref, () => ({
             openModal: (shoppingList?: TShoppingList|null) => {
-                if (shoppingList)
-                    setShoppingList(shoppingList);
+                if (shoppingList) setShoppingList(shoppingList);
 
                 setIsOpen(true);
             }
         }));
 
-        useEffect(() => {
-            formRef.current?.reset();
-        }, [shoppingList]);
+        useEffect(() => formRef.current?.reset(), [shoppingList]);
 
         /**
          * Closes the dialog.
@@ -55,7 +54,7 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
          * @param values
          */
         const save = (values: IFormType) => {
-            if (!user) return;
+            if (!user || !values.completeBy || !values.name) return;
 
             // we are creating new shopping list
             if (!shoppingList) {
@@ -91,19 +90,21 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
                                 <FormField<IFormType['name']>
                                     name="name"
                                     initialValue={shoppingList?.name || ''}
-                                    onBlurValidate={z.string().trim().min(3)}
+                                    onChangeValidate={z.string().trim().min(3)}
                                 >
                                     {({errors, value, setValue}) => <Field label="Jméno seznamu" errors={errors}>
-                                        <Input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Víkendový feast"/>
+                                        <Input value={value || ''}
+                                               onChange={(e) => setValue(e.target.value.length ? e.target.value : null)}
+                                               placeholder="Víkendový feast"/>
                                     </Field>}
                                 </FormField>
                                 <FormField<IFormType['completeBy']>
                                     name="completeBy"
-                                    initialValue={shoppingList?.complete_by || undefined}
-                                    onBlurValidate={z.date()}
+                                    initialValue={shoppingList?.complete_by || null}
+                                    onChangeValidate={z.date()}
                                 >
-                                    {({errors, value, setValue}) => (<Field label="Dokončit nákup před" errors={errors}>
-                                        <SingleDateInput value={value} onChange={(date) => setValue(date || new Date())}/>
+                                    {({errors, value, setValue}) => (<Field label="Dokončit nákup před" errors={errors} type="any">
+                                        <SingleDateInput value={value} onChange={(date) => setValue(date)} min={parseDate(new Date())}/>
                                     </Field>)}
                                 </FormField>
                             </form>

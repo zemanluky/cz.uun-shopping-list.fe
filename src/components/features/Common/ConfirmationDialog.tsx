@@ -1,52 +1,66 @@
-import React, {ReactNode, useState} from "react";
-import {Button, Heading, Text} from "@ParkComponents/ui";
-import {Dialog} from "@Components/ui/Dialog";
-import {Divider, Grid, HStack, VStack} from "../../../../styled-system/jsx";
-import {Cancel01Icon} from "hugeicons-react";
+import {forwardRef, ReactElement, useImperativeHandle, useRef, useState} from "react";
+import {Button, Text} from "@ParkComponents/ui";
+import {Dialog, DialogButtons, DialogContent, DialogHeading} from "@Components/ui/Dialog";
 
-interface ConfirmationDialogProps {
+interface IProps {
     title: string;
-    description?: string;
+    description: string;
+    content?: ReactElement;
     prompts?: {
         confirm?: string;
         cancel?: string;
     }
-    onConfirm: () => void;
-    onCancel?: () => void;
-    trigger: (setOpen: () => void) => ReactNode;
+    onConfirmDefault?: () => void;
+    onCancelDefault?: () => void;
 }
 
-export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const {title, description, prompts, onConfirm, onCancel, trigger} = props;
-
-    const cancel = () => {
-        setIsOpen(false);
-        onCancel?.();
-    }
-
-    const confirm = () => {
-        setIsOpen(false);
-        onConfirm();
-    }
-
-    return <>
-        {trigger(() => setIsOpen(true))}
-        <Dialog isOpen={isOpen}>
-            <VStack gap='2' alignItems='flex-start'>
-                <HStack justifyContent='space-between' w='100%'>
-                    <Heading as='h3' fontSize='2xl'>{title}</Heading>
-                    <Button variant='ghost' onClick={() => cancel()} css={{p: 2, position: 'relative', right: -2}}>
-                        <Cancel01Icon size={32}/>
-                    </Button>
-                </HStack>
-                {!!description && <Text>{description}</Text>}
-            </VStack>
-            <Divider my={8}/>
-            <Grid gap={2} columns={2}>
-                <Button variant={'subtle'} onClick={() => cancel()}>{prompts?.cancel || 'Zrušit'}</Button>
-                <Button onClick={() => confirm()}>{prompts?.confirm || 'Potvrdit'}</Button>
-            </Grid>
-        </Dialog>
-    </>;
+export interface IConfirmationDialogRef {
+    openModal: (onConfirm?: () => void, onCancel?: () => void) => void;
 }
+
+export const ConfirmationDialog = forwardRef<IConfirmationDialogRef, IProps>(
+    ({title, description, content, prompts, onConfirmDefault, onCancelDefault}, ref) => {
+        const [isOpen, setIsOpen] = useState<boolean>(false);
+        const onConfirmRef = useRef<(() => void)|null>(null);
+        const onCancelRef = useRef<(() => void)|null>(null);
+
+        useImperativeHandle(ref, () => ({
+            openModal: (onConfirm?: () => void, onCancel?: () => void) => {
+                if (!onConfirmDefault && !onConfirm)
+                    console.warn('No confirm callback provided.');
+
+                onConfirmRef.current = onConfirm || null;
+                onCancelRef.current = onCancel || null;
+
+                setIsOpen(true);
+            }
+        }))
+
+        /**
+         * Cancels the action.
+         */
+        const cancel = () => {
+            setIsOpen(false);
+            onCancelRef.current ? onCancelRef.current() : onCancelDefault?.()
+        }
+
+        /**
+         * Confirms the action.
+         */
+        const confirm = () => {
+            setIsOpen(false);
+            onConfirmRef.current ? onConfirmRef.current() : onConfirmDefault?.();
+        }
+
+        return <Dialog isOpen={isOpen}>
+            <DialogHeading heading={title} onCancel={cancel}/>
+            <DialogContent>
+                {content || <Text>{description}</Text>}
+            </DialogContent>
+            <DialogButtons buttons={[
+                <Button variant="subtle" onClick={cancel}>{prompts?.cancel || 'Zrušit'}</Button>,
+                <Button onClick={confirm}>{prompts?.confirm || 'Potvrdit'}</Button>
+            ]}/>
+        </Dialog>;
+    }
+);

@@ -7,18 +7,19 @@ import {AddMemberModal} from "@Components/features/MemberList/AddMemberModal.tsx
 
 interface MemberListProps extends BoxProps {
     members: Array<TUser>,
-    showAddModal?: boolean
+    showAddModal?: boolean,
+    readOnly?: boolean
 }
 
-export const MemberList: React.FC<MemberListProps> = ({members, showAddModal = false, ...boxProps}) => {
+export const MemberList: React.FC<MemberListProps> = ({members, readOnly, showAddModal = false, ...boxProps}) => {
     return <Box {...boxProps}>
-        <HStack justifyContent={'space-between'} mb={'4'}>
+        <HStack justifyContent={'space-between'} mb={'4'} minH={'40px'}>
             <Heading as={'h3'} fontSize={'2xl'} fontWeight={'bold'} display={'block'}>Členové</Heading>
-            {showAddModal && <AddMemberModal/>}
+            {showAddModal && !readOnly && <AddMemberModal/>}
         </HStack>
         {members.length > 0
             ? <VStack gap={2}>
-                {members.map(member => <MemberListItem key={member.id} user={member} />)}
+                {members.map(member => <MemberListItem key={member.id} user={member} readOnly={readOnly} />)}
             </VStack>
             : <Text>V tomto seznamu nejsou přidáni žádní členové.</Text>
         }

@@ -11,9 +11,10 @@ import { Checkbox as ArkCheckbox } from "@ark-ui/react";
 
 interface ShoppingListItemProps extends HstackProps {
     item?: ShoppingListItemType;
+    readOnly?: boolean;
 }
 
-export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hstackProps}) => {
+export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, readOnly, ...hstackProps}) => {
     const [isEditMode, setEditMode] = useState<boolean>(false);
     const [completed, setCompleted] = useState<ArkCheckbox.CheckedState>(false);
     const [form, setForm] = useState<{amount: string, name: string}>({amount: '', name: ''});
@@ -82,11 +83,11 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
                 {/* <Checkbox value={} readOnly name={'create_item_completed'}/> */}
                 <Input id={'create_item_amount'} placeholder={'Množství'} size={'sm'} value={form.amount}
                        onChange={(e) => updateFormField('amount', e.target.value)}
-                       onKeyDown={handleKeySave}
+                       onKeyDown={handleKeySave} disabled={readOnly}
                 />
                 <Input id={'create_item_name'} placeholder={'Název'} size={'sm'} value={form.name}
                        onChange={(e) => updateFormField('name', e.target.value)}
-                       onKeyDown={handleKeySave}
+                       onKeyDown={handleKeySave} disabled={readOnly}
                 />
             </HStack>
             <Button p={0} onClick={() => save()} disabled={form.name.length === 0 || form.amount.length === 0}>
@@ -98,25 +99,30 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({item, ...hsta
                    shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
     >
         <HStack gap={4}>
-            <Checkbox checked={completed} onCheckedChange={toggleComplete} name={`item_${item.id}_completed`} />
+            {!readOnly
+                ? <Checkbox checked={completed} onCheckedChange={toggleComplete} name={`item_${item.id}_completed`} />
+                : null
+            }
             <Text>
                 <Code fontWeight='semibold' px={2} mr={2}>{item.amount}</Code>
                 {item.name}
             </Text>
         </HStack>
-        <HStack gap={2}>
-            {completedByUser !== undefined
-                ? <Text>Dokončil: {completedByUser.name}</Text>
-                : <>
-                    <Button p={0} variant={'subtle'} onClick={() => setEditMode(true)}>
-                        <PencilEdit01Icon strokeWidth={2} />
-                    </Button>
-                    <Button p={0} variant={'subtle'} onClick={() => removeItem(item.id)} colorPalette={'red'}>
-                        <Delete02Icon strokeWidth={2} />
-                    </Button>
-                </>
-            }
-        </HStack>
-
+        {!readOnly
+            ? <HStack gap={2}>
+                {completedByUser !== undefined
+                    ? <Text>Dokončil: {completedByUser.name}</Text>
+                    : <>
+                        <Button p={0} variant={'subtle'} onClick={() => setEditMode(true)}>
+                            <PencilEdit01Icon strokeWidth={2} />
+                        </Button>
+                        <Button p={0} variant={'subtle'} onClick={() => removeItem(item.id)} colorPalette={'red'}>
+                            <Delete02Icon strokeWidth={2} />
+                        </Button>
+                    </>
+                }
+            </HStack>
+            : null
+        }
     </HStack>
 }

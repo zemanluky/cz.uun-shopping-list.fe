@@ -12,7 +12,7 @@ import {ShoppingListGrid} from "@Components/features/ShoppingList/ShoppingListGr
 import {ShoppingListFilters, TShoppingListFilters} from "@Components/features/ShoppingList/ShoppingListFilters.tsx";
 
 export const Homepage: React.FC = () => {
-    const [filters, setFilters] = useState<TShoppingListFilters>();
+    const [filters, setFilters] = useState<TShoppingListFilters>({search: null, showCompleted: false, completeBefore: null});
 
     const {isAuthenticated} = useAuth();
     const {shoppingLists} = useShoppingLists();

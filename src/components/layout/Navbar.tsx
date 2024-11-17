@@ -44,6 +44,7 @@ export const Navbar: React.FC = () => {
                     : <Menu
                         items={userOptions}
                         trigger={<Button>Přihlásit se</Button>}
+                        placement={'bottom-end'}
                     />
                 }
             </Container>

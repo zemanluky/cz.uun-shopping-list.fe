@@ -1,11 +1,11 @@
-import React, {ReactNode, useMemo} from "react";
+import React, {ReactElement, ReactNode, useMemo} from "react";
 import { Field as ParkField } from "@ParkComponents/ui/field";
 
 type TRenderType = 'input'|'textarea'|'select'|'any';
 
 interface IProps {
     label?: string|null,
-    children: ReactNode,
+    children: ReactElement,
     type?: TRenderType
     errors?: Array<string>
 }
@@ -36,7 +36,7 @@ export const Field: React.FC<IProps> = ({label, errors, children, type}) => {
                 </ParkField.Textarea>
 
             case 'any':
-                return children;
+                return React.cloneElement(children, {"aria-invalid": hasError});
 
             case 'input':
             default:

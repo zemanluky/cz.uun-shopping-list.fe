@@ -9,12 +9,11 @@ import {
     Delete02Icon,
     Door01Icon, Menu01Icon,
     MoreVerticalCircle01Icon,
-    PencilEdit01Icon, UserEdit01Icon
+    PencilEdit01Icon, TickDouble02Icon, UserEdit01Icon
 } from "hugeicons-react";
 import {Heading} from "@ParkComponents/ui";
 import {Menu, TMenuItem} from "@Components/ui";
 import {IconButton} from "@ParkComponents/ui/icon-button.tsx";
-import {IShoppingListModalRef} from "@Components/features/ShoppingList/ShoppingListModal.tsx";
 import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 import { useNavigate } from "react-router-dom";
 import {useAuth} from "../../../contexts";
@@ -25,34 +24,48 @@ import {countShoppingListItems} from "@Utils/shopping-list-items/count-items.ts"
 
 interface IProps {
     shoppingList: TShoppingList;
-    shoppingModalRef: React.RefObject<IShoppingListModalRef>
+    onUpdate?: () => void;
+    onDelete?: () => void;
+    onLeaveList?: () => void;
+    onCloseList?: () => void;
 }
 
 /** An overview card for a given shopping list. */
-export const ShoppingListCard: React.FC<IProps> = ({shoppingList, shoppingModalRef}) => {
+export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDelete, onLeaveList, onCloseList}) => {
     const navigate = useNavigate();
     const {user} = useAuth();
 
-    const menuItems = useMemo<Array<TMenuItem>>(() => {
+    const menuItems = useMemo<Array<TMenuItem>>((): Array<TMenuItem> => {
+        if (shoppingList.completed_at !== null) return [];
+
         if (user?.id === shoppingList.author_id) {
-            return [
-                {
-                    type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>,
-                    onClick: () => shoppingModalRef.current?.openModal(shoppingList)
-                },
-                {
-                    type: 'item', id: 'delete', text: 'Odstranit', icon: <Delete02Icon/>,
-                    onClick: () => {}
-                },
-            ];
+            const items: Array<TMenuItem> = [];
+
+            if (onCloseList)
+                items.push(
+                    {type: 'item', id: 'close', text: 'Uzavřít seznam', icon: <TickDouble02Icon/>, onClick: () => onCloseList()},
+                    {type: 'separator', id: 'sep-1'}
+                );
+
+            if (onUpdate)
+                items.push({
+                    type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>, onClick: () => onUpdate()
+                });
+
+            if (onDelete)
+                items.push({
+                    type: 'item', id: 'delete', text: 'Odstranit', icon: <Delete02Icon/>, onClick: () => onDelete()
+                });
+
+            return items;
         }
         else if (user && shoppingList.members.includes(user.id)) {
-            return [
+            return onLeaveList ? [
                 {
                     type: 'item', id: 'leave-list', text: 'Opustit seznam', icon: <Door01Icon/>,
-                    onClick: () => {}
+                    onClick: () => onLeaveList()
                 }
-            ];
+            ] : [];
         }
 
         return [];
@@ -77,7 +90,7 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, shoppingModalR
                     </Heading>
                     {menuItems.length
                         ? <Menu
-                            placement={'bottom'}
+                            placement={'bottom-end'}
                             items={menuItems}
                             trigger={<IconButton variant={'subtle'} size={'lg'}
                                                  className={css({pos: 'absolute', right: '4', top: '4', borderRadius: 'xl'})}
@@ -91,10 +104,18 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, shoppingModalR
                 <Box className={css(wrap.raw({ columnGap: '4', rowGap: '2' }), { mt: '2' })}>
                     <InformationRow title='Počet položek' data={`${itemCount?.total} položek`}
                                     icon={<Menu01Icon/>} size='xs'/>
-                    <InformationRow title='Z toho dokončených položek' data={`${itemCount?.completed} hotových`}
-                                    icon={<CheckListIcon/>} size='xs'/>
-                    <InformationRow title='Dokončit před' icon={<CalendarCheckOut01Icon/>} size='xs'
-                                    data={`Dokončit před ${format(shoppingList.complete_by, 'd. L. y')}`}/>
+                    {shoppingList.completed_at !== null
+                        ? <>
+                            <InformationRow title='Dokončeno' icon={<CalendarCheckOut01Icon/>} size='xs'
+                                            data={`Dokončeno ${format(shoppingList.completed_at, 'd. L. y')}`}/>
+                        </>
+                        : <>
+                            <InformationRow title='Z toho dokončených položek' data={`${itemCount?.completed} hotových`}
+                                            icon={<CheckListIcon/>} size='xs'/>
+                            <InformationRow title='Dokončit před' icon={<CalendarCheckOut01Icon/>} size='xs'
+                                            data={`Dokončit před ${format(shoppingList.complete_by, 'd. L. y')}`}/>
+                        </>
+                    }
                 </Box>
             </Box>
             <InformationRow title='Vytvořil' data={author?.name || ''} icon={<UserEdit01Icon/>} size='sm'/>

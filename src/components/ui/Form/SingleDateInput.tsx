@@ -1,35 +1,62 @@
 import React from "react";
 import {DatePicker} from "@ParkComponents/ui/date-picker";
-import {parseDate} from "@ark-ui/react";
-import {Input} from "@ParkComponents/ui/Input.tsx";
+import {parseDate, useDatePicker} from "@ark-ui/react";
 import {IconButton} from "@ParkComponents/ui/icon-button.tsx";
-import {ArrowLeft01Icon, ArrowRight01Icon, Calendar03Icon} from "hugeicons-react";
+import {Text} from "@ParkComponents/ui/Text.tsx";
+import {ArrowLeft01Icon, ArrowRight01Icon, Calendar03Icon, Cancel01Icon} from "hugeicons-react";
 import { Button } from "@ParkComponents/ui";
-import {parseISO} from "date-fns";
+import {format, parseISO} from "date-fns";
+import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
+import {css} from "../../../../styled-system/css";
 
-interface IProps {
+interface IProps extends Omit<DatePicker.RootProps, 'value'|'onValueChange'|'onChange'|'selectionMode'|'positioning'> {
     value: Date|undefined|null;
     onChange: (value: Date|null) => void;
 }
 
-export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
-    return <DatePicker.Root
-        startOfWeek={1}
-        selectionMode={"single"}
-        positioning={{sameWidth: true}}
-        onValueChange={(value) => onChange(parseISO(value.valueAsString[0]))}
-        value={value ? [parseDate(value)] : []}
-        locale={'cs'}
-    >
+export const SingleDateInput: React.FC<IProps> = ({value, onChange, ...datePickerProps}) => {
+    /**
+     * Changes the value of the input.
+     * @param dateValues
+     */
+    const changeValue = (dateValues: string[]): void => {
+        if (!dateValues.length)
+            return onChange(null);
+
+        onChange(parseISO(dateValues[0]));
+    }
+
+    const datePicker = useDatePicker({
+        ...datePickerProps,
+        startOfWeek: 1,
+        selectionMode: 'single',
+        positioning: { sameWidth: true },
+        onValueChange: (change) => changeValue(change.valueAsString),
+        value: value ? [parseDate(value)] : [],
+        locale: 'cs-CZ',
+    });
+
+    return <DatePicker.RootProvider value={datePicker}>
         <DatePicker.Control>
-            <DatePicker.Input index={0} asChild>
-                <Input />
-            </DatePicker.Input>
             <DatePicker.Trigger asChild>
-                <IconButton variant="outline" aria-label="Vybrat datum">
-                    <Calendar03Icon/>
-                </IconButton>
+                <Button aria-label="Vybrat datum" variant="outline"
+                        className={css({
+                            w: '100%', pos: 'relative', display: "flex", justifyContent: "left", fontWeight: "normal",
+                            _invalid: { colorPalette: 'red'}
+                        })}
+                >
+                    {datePicker.valueAsDate[0]
+                        ? <Text fontSize="md">{format(datePicker.valueAsDate[0], 'd. L. y')}</Text>
+                        : <Text color={{base: 'fg.subtle', _invalid: 'fg.error'}} fontSize="md">Vyberte datum</Text>
+                    }
+                    <HugeIcon icon={<Calendar03Icon/>} className={css({pos: 'absolute', right: '3'})}/>
+                </Button>
             </DatePicker.Trigger>
+            <DatePicker.ClearTrigger asChild>
+                <IconButton variant="outline" aria-label="Zrušit výběr" colorPalette='red'>
+                    <Cancel01Icon/>
+                </IconButton>
+            </DatePicker.ClearTrigger>
         </DatePicker.Control>
         <DatePicker.Positioner>
             <DatePicker.Content>
@@ -162,5 +189,5 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                     </DatePicker.View>
                 </DatePicker.Content>
             </DatePicker.Positioner>
-    </DatePicker.Root>
+    </DatePicker.RootProvider>
 }

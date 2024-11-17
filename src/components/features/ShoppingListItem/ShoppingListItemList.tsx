@@ -5,10 +5,11 @@ import {TShoppingListItem} from "../../../types/shopping-list.ts";
 import {ShoppingListItem} from "@Components/features/ShoppingListItem/ShoppingListItem.tsx";
 
 interface ShoppingListItemsProps extends BoxProps {
-    items: Array<TShoppingListItem>
+    items: Array<TShoppingListItem>,
+    readOnly?: boolean
 }
 
-export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, ...boxProps}) => {
+export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, readOnly, ...boxProps}) => {
     const [showIncompleteOnly, setShowIncompleteOnly] = useState<boolean>(false);
     const filteredItems = useMemo(() => items.filter(item => {
         if (!showIncompleteOnly) return item;
@@ -16,15 +17,20 @@ export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, .
     }), [items, showIncompleteOnly]);
 
     return <Box {...boxProps}>
-        <HStack justifyContent={'space-between'} mb={'4'}>
+        <HStack justifyContent={'space-between'} mb={'4'} minH={'40px'}>
             <Heading as={'h3'} fontSize={'2xl'} fontWeight={'bold'} display={'block'}>Položky</Heading>
-            <Checkbox checked={!showIncompleteOnly} onCheckedChange={() => setShowIncompleteOnly(!showIncompleteOnly)}>
-                Zobrazit hotové
-            </Checkbox>
+            {!readOnly
+                ? <Checkbox checked={!showIncompleteOnly} onCheckedChange={() => setShowIncompleteOnly(!showIncompleteOnly)}>
+                    Zobrazit hotové
+                </Checkbox>
+                : null
+            }
         </HStack>
         <VStack gap={2}>
-            <ShoppingListItem/>
-            {filteredItems.map(item => <ShoppingListItem key={item.id} item={item} />)}
+            {!readOnly ? <ShoppingListItem/> : null}
+            {filteredItems.map(item =>
+                <ShoppingListItem key={item.id} item={item} readOnly={readOnly} />
+            )}
         </VStack>
     </Box>
 }

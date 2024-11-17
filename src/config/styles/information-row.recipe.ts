@@ -6,7 +6,7 @@ export const informationRowRecipe = defineSlotRecipe({
     description: 'Styles for information row component.',
     slots: ['root', 'iconContainer', 'title', 'data', 'icon'],
     base: {
-        iconContainer: { bg: 'accent.2' },
+        iconContainer: { bg: 'accent.3' },
         title: { fontWeight: 'semibold', lineHeight: 'tight', as: 'span' },
         data: { lineHeight: 'tight', as: 'span' }
     },
@@ -21,7 +21,7 @@ export const informationRowRecipe = defineSlotRecipe({
             },
             sm: {
                 root: { gap: 2 },
-                iconContainer: { p: 4 },
+                iconContainer: { p: 2 },
                 icon: { size: '20px' },
                 title: { fontSize: 'md' },
                 data: { fontSize: 'sm' }

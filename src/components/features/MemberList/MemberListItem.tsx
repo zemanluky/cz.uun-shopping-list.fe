@@ -6,10 +6,11 @@ import {useAuth, useShoppingList} from "../../../contexts";
 import {Delete02Icon} from "hugeicons-react";
 
 interface MemberListItemProps extends HstackProps {
-    user: TUser
+    user: TUser,
+    readOnly?: boolean
 }
 
-export const MemberListItem: React.FC<MemberListItemProps> = ({user, ...hStackProps}) => {
+export const MemberListItem: React.FC<MemberListItemProps> = ({user, readOnly, ...hStackProps}) => {
     const { shoppingList, removeMember } = useShoppingList();
     const { user: loggedInUser } = useAuth();
 
@@ -25,12 +26,20 @@ export const MemberListItem: React.FC<MemberListItemProps> = ({user, ...hStackPr
 
     if (!shoppingList || !loggedInUser) return undefined;
 
-    return <HStack p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'} {...hStackProps}>
+    return <HStack
+        p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
+        {...hStackProps}
+    >
         <HStack gap={2}>
-            <Circle p='3' fontWeight='bold' fontSize={'lg'} bg='accent.3' color={'accent.12'}>{initials}</Circle>
+            <Circle
+                p='2' fontWeight='bold' fontSize={'md'} bg='accent.3' color={'accent.12'} aspectRatio={'1/1'}
+                height={'40px'}
+            >
+                {initials}
+            </Circle>
             <Text fontWeight='semibold'>{user.name}</Text>
         </HStack>
-        {shoppingList.author_id === loggedInUser.id || loggedInUser.id === user.id
+        {shoppingList.author_id === loggedInUser.id && !readOnly
             ? <Button variant={'subtle'} p={0} onClick={() => removeMember(user.id)}>
                 <Delete02Icon strokeWidth={2} />
             </Button>

@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Grid, GridProps} from "../../../../styled-system/jsx";
 import {Field, SingleDateInput} from "@Components/ui/Form";
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {Checkbox, Heading} from "@ParkComponents/ui";
 import * as R from "remeda";
+import {parseDate} from "@ark-ui/react";
 
 export type TShoppingListFilters = {
     search: string|null;
@@ -22,7 +23,7 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
         showCompleted: false
     });
 
-    const debounceFilterChange = R.debounce(onFilterChange, {waitMs: 700});
+    const debounceFilterChange = useMemo(() => R.debounce(onFilterChange, {waitMs: 300, timing: "trailing"}), []);
 
     /**
      * Updates filter's value on a given key.
@@ -46,7 +47,9 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
         </Field>
         <Field label="Dokončit před">
             <SingleDateInput value={completeBefore}
-                             onChange={(newDate) => changeFilter('completeBefore', newDate)}/>
+                             onChange={(newDate) => changeFilter('completeBefore', newDate)}
+                             min={parseDate(new Date())}
+            />
         </Field>
         <Field type="any">
             <Checkbox checked={showCompleted} onCheckedChange={() => changeFilter('showCompleted', !showCompleted)}>
