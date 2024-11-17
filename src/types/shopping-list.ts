@@ -1,21 +1,19 @@
-import {DateTime} from "luxon";
-
-export type ShoppingList = {
+export type TShoppingList = {
     id: number;
     name: string;
     author_id: number;
-    complete_by: DateTime;
-    completed_at: DateTime|null;
+    complete_by: Date;
+    completed_at: Date|null;
     completed_by: number|null;
-    last_updated: DateTime;
-    items: Array<ShoppingListItem>;
+    last_updated: Date;
+    items: Array<TShoppingListItem>;
     members: Array<number>;
 }
 
-export type ShoppingListItem = {
+export type TShoppingListItem = {
     id: number;
     name: string;
     amount: string;
-    completed_at: DateTime|null;
+    completed_at: Date|null;
     completed_by: number|null;
 }

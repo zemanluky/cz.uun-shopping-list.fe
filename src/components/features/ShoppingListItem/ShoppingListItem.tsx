@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {ShoppingListItem as ShoppingListItemType} from "../../../types/shopping-list.ts";
+import {TShoppingListItem as ShoppingListItemType} from "../../../types/shopping-list.ts";
 import {HStack, HstackProps} from "../../../../styled-system/jsx";
 import {Text, Code, Checkbox, Button} from "@ParkComponents/ui";
 import {useAuth, useShoppingList} from "../../../contexts";

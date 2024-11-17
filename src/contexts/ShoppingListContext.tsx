@@ -1,15 +1,14 @@
 import * as React from 'react';
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {ShoppingList, ShoppingListItem} from "../types/shopping-list.ts";
+import {TShoppingList, TShoppingListItem} from "../types/shopping-list.ts";
 import {useShoppingLists} from "./ShoppingListsContext.tsx";
 import {TUser} from "../types/auth.ts";
-import {DateTime} from "luxon";
 
 interface ShoppingListContextType {
-    shoppingList: ShoppingList|null;
+    shoppingList: TShoppingList|null;
     setShoppingList: (id: number|null) => void;
-    items: Array<ShoppingListItem>|null;
-    saveItem: (item: Omit<ShoppingListItem, 'id'>, id?: number|null) => void;
+    items: Array<TShoppingListItem>|null;
+    saveItem: (item: Omit<TShoppingListItem, 'id'>, id?: number|null) => void;
     toggleItem: (id: number, user: TUser) => void;
     removeItem: (id: number) => void;
     addMember: (id: number) => void;
@@ -27,7 +26,7 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
         () => shoppingLists.find(sl => sl.id === shoppingListId) || null,
         [shoppingListId, shoppingLists]
     );
-    const items = useMemo<Array<ShoppingListItem>|null>(() => {
+    const items = useMemo<Array<TShoppingListItem>|null>(() => {
         if (!shoppingList) return null;
         return shoppingList.items;
     }, [shoppingListId, shoppingLists, shoppingList]);
@@ -40,13 +39,13 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
      * @param data
      * @param id
      */
-    const saveItem = (data: Pick<ShoppingListItem, 'name'|'amount'>, id: number|null = null): void => {
+    const saveItem = (data: Pick<TShoppingListItem, 'name'|'amount'>, id: number|null = null): void => {
         if (!shoppingList || !items) return;
 
         // creating new item
         if (id === null) {
             const lastId = Math.max(...items.map(sl => sl.id));
-            const newItem: ShoppingListItem = { id: lastId + 1, completed_at: null, completed_by: null, ...data };
+            const newItem: TShoppingListItem = { id: lastId + 1, completed_at: null, completed_by: null, ...data };
 
             saveShoppingList({ ...shoppingList, items: [...items, newItem]}, shoppingList.id);
             return;
@@ -98,7 +97,7 @@ export const ShoppingListProvider: React.FC<{children: React.ReactNode}> = ({ ch
                     return {
                         ...item,
                         completed_by: user.id,
-                        completed_at: DateTime.now()
+                        completed_at: new Date()
                     };
                 }
 

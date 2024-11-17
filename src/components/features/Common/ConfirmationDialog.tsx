@@ -1,7 +1,7 @@
 import React, {ReactNode, useState} from "react";
 import {Button, Heading, Text} from "@ParkComponents/ui";
 import {Dialog} from "@Components/ui";
-import {Divider, Grid, HStack, VStack} from "../../../styled-system/jsx";
+import {Divider, Grid, HStack, VStack} from "../../../../styled-system/jsx";
 import {Cancel01Icon} from "hugeicons-react";
 
 interface ConfirmationDialogProps {

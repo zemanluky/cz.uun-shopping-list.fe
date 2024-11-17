@@ -30,7 +30,8 @@
     "paths": {
       "@ParkComponents/*": ["./src/library/components/*"],
       "@Components/*": ["./src/components/*"],
-      "@Pages/*": ["./src/pages/*"]
+      "@Pages/*": ["./src/pages/*"],
+      "@Utils/*": ["./src/utils/*"]
     }
   },
   "include": ["src", "styled-system"]

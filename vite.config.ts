@@ -13,7 +13,8 @@ export default defineConfig({
         alias: {
             "@ParkComponents/*": path.resolve(__dirname, "./src/library/components"),
             "@Components/*": path.resolve(__dirname, "./src/components"),
-            "@Pages/*": path.resolve(__dirname, "./src/pages")
+            "@Pages/*": path.resolve(__dirname, "./src/pages"),
+            "@Utils/*": path.resolve(__dirname, "./src/utils"),
         }
     }
 })

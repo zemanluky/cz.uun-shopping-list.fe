@@ -11,17 +11,19 @@ import {css} from "../../../styled-system/css";
 import {useAuth} from "../../contexts";
 import {useShoppingList} from "../../contexts";
 import {Navigate} from "react-router-dom";
-import {ConfirmationDialog} from "@Components/ui/ConfirmationDialog.tsx";
+import {ConfirmationDialog} from "@Components/features/Common/ConfirmationDialog.tsx";
 import {InformationRow} from "@Components/ui/InformationRow.tsx";
 import {ReactNode, useMemo, useRef} from "react";
 import {users} from "../../data/users.ts";
 import {MemberList} from "@Components/features/MemberList/MemberList.tsx";
-import {ShoppingListItems} from "@Components/features/ShoppingList/ShoppingListItems.tsx";
+import {ShoppingListItemList} from "@Components/features/ShoppingListItem/ShoppingListItemList.tsx";
 import {Menu} from "@Components/ui";
 import {
-    ShoppingListDetailModal,
-    ShoppingListDetailModalRef
-} from "@Components/features/ShoppingListDetail/ShoppingListDetailModal.tsx";
+    ShoppingListModal,
+    IShoppingListModalRef
+} from "@Components/features/ShoppingList/ShoppingListModal.tsx";
+import {format} from "date-fns";
+import {countShoppingListItems} from "@Utils/shopping-list-items/count-items.ts";
 
 interface DetailProps {
     id: number;
@@ -38,12 +40,12 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
             .filter(m => m !== undefined) || [],
         [shoppingList]
     );
-    const itemCount = useMemo(() => ({
-        total: shoppingList?.items.length,
-        completed: shoppingList?.items.filter(i => i.completed_at !== null).length
-    }), [shoppingList?.items]);
+    const itemCount = useMemo(
+        () => shoppingList ? countShoppingListItems(shoppingList) : null,
+        [shoppingList?.items]
+    );
 
-    const editModalRef = useRef<ShoppingListDetailModalRef>(null);
+    const editModalRef = useRef<IShoppingListModalRef>(null);
 
     const renderHeaderActions = (): ReactNode => {
         return <>
@@ -58,7 +60,7 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
             />
             <Menu
                 items={[
-                    { type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>, onClick: () => editModalRef.current?.openModal()},
+                    { type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>, onClick: () => editModalRef.current?.openModal(shoppingList)},
                     { type: 'item', id: 'delete', text: 'Odstranit', icon: <Delete02Icon/>, onClick: () => {} },
                 ]}
                 trigger={<Button size={'xl'} variant={'subtle'} p={0}>
@@ -92,25 +94,25 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
                         icon={<UserEdit01Icon size={28} strokeWidth={2}/>}
                     />
                     <InformationRow
-                        title='Naposledy aktualizováno' data={shoppingList.last_updated.toFormat('d. L. y')}
+                        title='Naposledy aktualizováno' data={format(shoppingList.last_updated, 'd. L. y')}
                         icon={<CalendarSetting01Icon size={28} strokeWidth={2}/>}
                     />
                     <InformationRow
                         title='Počet položek / hotové položky'
-                        data={`${itemCount.total} položek / ${itemCount.completed} hotových položek`}
+                        data={`${itemCount?.total} položek / ${itemCount?.completed} hotových položek`}
                         icon={<CheckListIcon size={28} strokeWidth={2}/>}
                     />
                     <InformationRow
-                        title='Dokončit seznam před' data={shoppingList.complete_by.toFormat('d. L. y')}
+                        title='Dokončit seznam před' data={format(shoppingList.complete_by, 'd. L. y')}
                         icon={<CalendarCheckOut01Icon size={28} strokeWidth={2}/>}
                     />
                 </VStack>
             </Grid>
             <HStack gap='8' mt='8' alignItems='flex-start'>
-                <ShoppingListItems items={shoppingList.items} w={'2/3'}/>
+                <ShoppingListItemList items={shoppingList.items} w={'2/3'}/>
                 <MemberList members={members} showAddModal={user.id === shoppingList.author_id} w={'1/3'}/>
             </HStack>
         </Container>
-        <ShoppingListDetailModal ref={editModalRef}/>
+        <ShoppingListModal ref={editModalRef}/>
     </>);
 }

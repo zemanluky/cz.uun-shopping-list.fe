@@ -1,14 +1,14 @@
 import React, {useMemo, useState} from "react";
 import {Checkbox, Heading} from "@ParkComponents/ui";
 import {Box, BoxProps, HStack, VStack} from "../../../../styled-system/jsx";
-import {ShoppingListItem as ShoppingListItemType} from "../../../types/shopping-list.ts";
-import {ShoppingListItem} from "@Components/features/ShoppingList/ShoppingListItem.tsx";
+import {TShoppingListItem} from "../../../types/shopping-list.ts";
+import {ShoppingListItem} from "@Components/features/ShoppingListItem/ShoppingListItem.tsx";
 
 interface ShoppingListItemsProps extends BoxProps {
-    items: Array<ShoppingListItemType>
+    items: Array<TShoppingListItem>
 }
 
-export const ShoppingListItems: React.FC<ShoppingListItemsProps> = ({items, ...boxProps}) => {
+export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, ...boxProps}) => {
     const [showIncompleteOnly, setShowIncompleteOnly] = useState<boolean>(false);
     const filteredItems = useMemo(() => items.filter(item => {
         if (!showIncompleteOnly) return item;

@@ -2,6 +2,8 @@ import React from "react";
 import {Menu as ParkMenu} from "@ParkComponents/ui";
 import {HStack} from "../../../styled-system/jsx";
 import {UnfoldMoreIcon} from "hugeicons-react";
+import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
+import {Placement} from "@floating-ui/utils";
 
 interface BaseMenuItem {
     type: 'separator'|'item'|'nested'
@@ -15,38 +17,42 @@ interface FinalMenuItem extends BaseMenuItem {
     type: 'item',
     id: string,
     text: string,
-    icon?: React.ReactNode,
+    icon?: React.ReactElement,
     onClick: () => void;
 }
 
 interface NestedMenuItem extends BaseMenuItem {
     type: 'nested',
-    items: Array<MenuItem>,
+    items: Array<TMenuItem>,
     text: string,
-    icon?: React.ReactNode,
+    icon?: React.ReactElement,
 }
 
-export type MenuItem = | MenuSeparator | FinalMenuItem | NestedMenuItem;
+export type TMenuItem = | MenuSeparator | FinalMenuItem | NestedMenuItem;
 
 export interface MenuProps {
-    items: Array<MenuItem>,
-    trigger: React.ReactNode
+    items: Array<TMenuItem>,
+    trigger: React.ReactNode,
+    placement?: Placement
 }
 
-export const Menu: React.FC<MenuProps> = ({items, trigger}) => {
+export const Menu: React.FC<MenuProps> = ({items, trigger, placement}) => {
 
     /**
      * Renders a given menu item.
      * @param menuItem
      */
-    const renderItem = (menuItem: MenuItem): React.ReactNode => {
+    const renderItem = (menuItem: TMenuItem): React.ReactNode => {
         switch (menuItem.type) {
             case 'separator':
                 return <ParkMenu.Separator />;
             case 'item':
                 return <ParkMenu.Item value={menuItem.id} key={menuItem.id} onClick={() => menuItem.onClick()}>
                     <HStack alignItems='center' gap='4'>
-                        {menuItem.icon ?? null}
+                        {!!menuItem.icon
+                            ? <HugeIcon icon={menuItem.icon}/>
+                            : null
+                        }
                         {menuItem.text}
                     </HStack>
                 </ParkMenu.Item>
@@ -55,7 +61,10 @@ export const Menu: React.FC<MenuProps> = ({items, trigger}) => {
                     <ParkMenu.TriggerItem>
                         <HStack justifyContent='space-between'>
                             <HStack alignItems='center' gap='4'>
-                                {menuItem.icon ?? null}
+                                {menuItem.icon
+                                    ? <HugeIcon icon={menuItem.icon}/>
+                                    : null
+                                }
                                 {menuItem.text}
                             </HStack>
                             <UnfoldMoreIcon/>
@@ -70,7 +79,7 @@ export const Menu: React.FC<MenuProps> = ({items, trigger}) => {
         }
     }
 
-    return <ParkMenu.Root>
+    return <ParkMenu.Root positioning={{flip: true, placement: placement}}>
         <ParkMenu.Trigger asChild>{trigger}</ParkMenu.Trigger>
         <ParkMenu.Positioner>
             <ParkMenu.Content>

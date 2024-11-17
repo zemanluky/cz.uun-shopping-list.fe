@@ -5,7 +5,7 @@ import {Text} from "@ParkComponents/ui/Text.tsx";
 import {Button} from "@ParkComponents/ui/Button.tsx";
 import {css} from "../../../styled-system/css";
 import {Container, HStack} from "../../../styled-system/jsx";
-import {Menu, MenuItem} from "@Components/ui/Menu.tsx";
+import {Menu, TMenuItem} from "@Components/ui/Menu.tsx";
 import {users} from "../../data/users.ts";
 import {Link} from "react-router-dom";
 
@@ -21,7 +21,7 @@ const navbarStyles = css({
 export const Navbar: React.FC = () => {
     const {isAuthenticated, user, login, logout} = useAuth();
 
-    const userOptions = useMemo<Array<MenuItem>>(
+    const userOptions = useMemo<Array<TMenuItem>>(
         () => users.map(user => ({
             type: 'item',
             id: `user_${user.id}`,

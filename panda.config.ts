@@ -1,5 +1,6 @@
 import { defineConfig } from "@pandacss/dev";
 import {createPreset} from "@park-ui/panda-preset";
+import {informationRowRecipe} from "./src/config/styles/information-row.recipe";
 
 export default defineConfig({
   globalCss: {
@@ -25,5 +26,12 @@ export default defineConfig({
   // The output directory for your css system
   outdir: "styled-system",
   // this is needed for creating components with panda styles
-  jsxFramework: "react"
+  jsxFramework: "react",
+  theme: {
+    extend: {
+      slotRecipes: {
+        informationRow: informationRowRecipe
+      }
+    }
+  }
 });
