@@ -26,7 +26,7 @@ export const ShoppingListsProvider: React.FC<{children: React.ReactNode}> = ({ c
         // creating new list
         if (id === null) {
             const lastId = Math.max(...shoppingLists.map(sl => sl.id));
-            const newList: TShoppingList = { ...data, id: lastId + 1, last_updated: new Date() };
+            const newList: TShoppingList = { ...data, id: lastId !== -Infinity ? lastId + 1 : 1, last_updated: new Date() };
 
             setShoppingLists(prev => [...prev, newList]);
             return;
