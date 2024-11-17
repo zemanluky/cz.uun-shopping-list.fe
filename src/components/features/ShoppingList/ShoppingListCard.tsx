@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import {useAuth} from "../../../contexts";
 import {InformationRow} from "@Components/ui/InformationRow.tsx";
 import {users} from "../../../data/users.ts";
-import {format} from "date-fns";
+import {format, isBefore} from "date-fns";
 import {countShoppingListItems} from "@Utils/shopping-list-items/count-items.ts";
 
 interface IProps {
@@ -113,7 +113,8 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDe
                             <InformationRow title='Z toho dokončených položek' data={`${itemCount?.completed} hotových`}
                                             icon={<CheckListIcon/>} size='xs'/>
                             <InformationRow title='Dokončit před' icon={<CalendarCheckOut01Icon/>} size='xs'
-                                            data={`Dokončit před ${format(shoppingList.complete_by, 'd. L. y')}`}/>
+                                            data={`Dokončit před ${format(shoppingList.complete_by, 'd. L. y')}`}
+                                            state={isBefore(shoppingList.complete_by, new Date()) ? 'error' : 'default'}/>
                         </>
                     }
                 </Box>

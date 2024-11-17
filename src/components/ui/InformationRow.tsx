@@ -14,8 +14,8 @@ interface IProps extends InformationRowVariantProps {
 }
 
 /** Shows icon, name or label of the provided data, and the data itself. */
-export const InformationRow: React.FC<IProps> = ({title, data, icon, size}) => {
-    const classes = informationRow({ size });
+export const InformationRow: React.FC<IProps> = ({title, data, icon, size, state}) => {
+    const classes = informationRow({ size, state });
 
     return <HStack className={classes.root}>
         <Circle className={classes.iconContainer}>

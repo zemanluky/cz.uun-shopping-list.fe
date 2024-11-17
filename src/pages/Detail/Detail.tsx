@@ -22,7 +22,7 @@ import {
     ShoppingListModal,
     IShoppingListModalRef
 } from "@Components/features/ShoppingList/ShoppingListModal.tsx";
-import {format} from "date-fns";
+import {format, isBefore} from "date-fns";
 import {countShoppingListItems} from "@Utils/shopping-list-items/count-items.ts";
 import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 
@@ -156,6 +156,7 @@ export const Detail: React.FC<DetailProps> = ({ id }) => {
                         title={completed ? 'Dokončeno' : 'Dokončit nákup před'}
                         data={format(completed ? shoppingList.completed_at! : shoppingList.complete_by, 'd. L. y')}
                         icon={<CalendarCheckOut01Icon/>}
+                        state={!completed && isBefore(shoppingList.complete_by, new Date()) ? 'error' : 'default'}
                     />
                 </VStack>
             </Grid>

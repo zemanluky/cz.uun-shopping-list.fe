@@ -6,7 +6,7 @@ export const informationRowRecipe = defineSlotRecipe({
     description: 'Styles for information row component.',
     slots: ['root', 'iconContainer', 'title', 'data', 'icon'],
     base: {
-        iconContainer: { bg: 'accent.3' },
+        iconContainer: { bg: 'colorPalette.3' },
         title: { fontWeight: 'semibold', lineHeight: 'tight', as: 'span' },
         data: { lineHeight: 'tight', as: 'span' }
     },
@@ -34,8 +34,21 @@ export const informationRowRecipe = defineSlotRecipe({
                 data: { fontSize: 'md' }
             }
         },
+        state: {
+            default: {
+                iconContainer: { colorPalette: 'accent' },
+                data: { color: 'fg.primary' },
+                icon: { color: 'fg.primary' }
+            },
+            error: {
+                iconContainer: { colorPalette: 'red' },
+                data: { color: 'fg.error' },
+                icon: { color: 'fg.error' }
+            }
+        }
     },
     defaultVariants: {
-        size: 'md'
+        size: 'md',
+        state: 'default'
     }
 })
