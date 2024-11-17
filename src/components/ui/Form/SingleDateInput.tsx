@@ -39,17 +39,17 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                             <>
                                 <DatePicker.ViewControl>
                                     <DatePicker.PrevTrigger asChild>
-                                        <IconButton variant="ghost" size="sm">
+                                        <IconButton variant="ghost" size="sm" type='button'>
                                             <ArrowLeft01Icon />
                                         </IconButton>
                                     </DatePicker.PrevTrigger>
                                     <DatePicker.ViewTrigger asChild>
-                                        <Button variant="ghost" size="sm">
+                                        <Button variant="ghost" size="sm" type='button'>
                                             <DatePicker.RangeText />
                                         </Button>
                                     </DatePicker.ViewTrigger>
                                     <DatePicker.NextTrigger asChild>
-                                        <IconButton variant="ghost" size="sm">
+                                        <IconButton variant="ghost" size="sm" type='button'>
                                             <ArrowRight01Icon />
                                         </IconButton>
                                     </DatePicker.NextTrigger>
@@ -68,7 +68,7 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                                                 {week.map((day, id) => (
                                                     <DatePicker.TableCell key={id} value={day}>
                                                         <DatePicker.TableCellTrigger asChild>
-                                                            <IconButton variant="ghost">{day.day}</IconButton>
+                                                            <IconButton variant="ghost" type='button'>{day.day}</IconButton>
                                                         </DatePicker.TableCellTrigger>
                                                     </DatePicker.TableCell>
                                                 ))}
@@ -86,17 +86,17 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                             <>
                                 <DatePicker.ViewControl>
                                     <DatePicker.PrevTrigger asChild>
-                                        <IconButton variant="ghost" size="sm">
+                                        <IconButton variant="ghost" size="sm" type="button">
                                             <ArrowLeft01Icon />
                                         </IconButton>
                                     </DatePicker.PrevTrigger>
                                     <DatePicker.ViewTrigger asChild>
-                                        <Button variant="ghost" size="sm">
+                                        <Button variant="ghost" size="sm" type="button">
                                             <DatePicker.RangeText />
                                         </Button>
                                     </DatePicker.ViewTrigger>
                                     <DatePicker.NextTrigger asChild>
-                                        <IconButton variant="ghost" size="sm">
+                                        <IconButton variant="ghost" size="sm" type="button">
                                             <ArrowRight01Icon />
                                         </IconButton>
                                     </DatePicker.NextTrigger>
@@ -108,7 +108,7 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                                                 {months.map((month, id) => (
                                                     <DatePicker.TableCell key={id} value={month.value}>
                                                         <DatePicker.TableCellTrigger asChild>
-                                                            <Button variant="ghost">{month.label}</Button>
+                                                            <Button variant="ghost" type="button">{month.label}</Button>
                                                         </DatePicker.TableCellTrigger>
                                                     </DatePicker.TableCell>
                                                 ))}
@@ -126,17 +126,17 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                             <>
                                 <DatePicker.ViewControl>
                                     <DatePicker.PrevTrigger asChild>
-                                        <IconButton variant="ghost" size="sm">
+                                        <IconButton variant="ghost" size="sm" type="button">
                                             <ArrowLeft01Icon />
                                         </IconButton>
                                     </DatePicker.PrevTrigger>
                                     <DatePicker.ViewTrigger asChild>
-                                        <Button variant="ghost" size="sm">
+                                        <Button variant="ghost" size="sm" type="button">
                                             <DatePicker.RangeText />
                                         </Button>
                                     </DatePicker.ViewTrigger>
                                     <DatePicker.NextTrigger asChild>
-                                        <IconButton variant="ghost" size="sm">
+                                        <IconButton variant="ghost" size="sm" type="button">
                                             <ArrowRight01Icon />
                                         </IconButton>
                                     </DatePicker.NextTrigger>
@@ -148,7 +148,7 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange}) => {
                                                 {years.map((year, id) => (
                                                     <DatePicker.TableCell key={id} value={year.value}>
                                                         <DatePicker.TableCellTrigger asChild>
-                                                            <Button variant="ghost">{year.label}</Button>
+                                                            <Button variant="ghost" type="button">{year.label}</Button>
                                                         </DatePicker.TableCellTrigger>
                                                     </DatePicker.TableCell>
                                                 ))}

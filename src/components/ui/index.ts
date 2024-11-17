@@ -1,2 +1,2 @@
 export * from "./Menu.tsx";
-export * from "./Dialog.tsx";
+export * from "./InformationRow.tsx";

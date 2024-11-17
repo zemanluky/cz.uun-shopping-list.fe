@@ -1,11 +1,9 @@
 import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
 import {Button} from "@ParkComponents/ui";
-import {Dialog} from "@Components/ui";
 import {useAuth, useShoppingLists} from "../../../contexts";
 import {TShoppingList} from "../../../types/shopping-list.ts";
-import {DialogHeading} from "@Components/ui/Dialog/DialogHeading.tsx";
 import {Form, Field as FormField, FormInstance} from "houseform";
-import {DialogButtons, DialogContent} from "@Components/ui/Dialog";
+import {Dialog, DialogHeading, DialogButtons, DialogContent} from "@Components/ui/Dialog";
 import {Field, SingleDateInput} from "@Components/ui/Form";
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {z} from "@Utils/zod.config.ts";
@@ -96,7 +94,7 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
                                     onBlurValidate={z.string().trim().min(3)}
                                 >
                                     {({errors, value, setValue}) => <Field label="Jméno seznamu" errors={errors}>
-                                        <Input value={value} onChange={(e) => setValue(e.target.value)}/>
+                                        <Input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Víkendový feast"/>
                                     </Field>}
                                 </FormField>
                                 <FormField<IFormType['completeBy']>
