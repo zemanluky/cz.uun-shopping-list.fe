@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@ark-ui/react": "^4.2.0",
+    "async-mutex": "^0.5.0",
+    "axios": "^1.7.9",
     "date-fns": "^4.1.0",
     "houseform": "^1.13.0",
     "hugeicons-react": "^0.3.0",
@@ -20,6 +22,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
     "remeda": "^2.17.3",
+    "swr": "^2.2.5",
     "zod": "^3.23.8",
     "zod-i18n-map": "^2.27.0"
   },

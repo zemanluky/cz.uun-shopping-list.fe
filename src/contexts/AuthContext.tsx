@@ -1,41 +1,72 @@
 import * as React from 'react';
-import {createContext, useContext, useState} from "react";
-import {TUser} from "../types/auth.ts";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
+import {TUser} from "../types/user.ts";
+import {deleteAccessToken, getAccessToken, saveAccessToken} from "@Utils/access-token.utils.ts";
+import {authenticatedFetcher} from "@Utils/axios.config.ts";
+import {apiRoutes} from "../config/api/routes.ts";
+import useSWRMutation from "swr/mutation";
+import {logoutMutator} from "../data/mutator/auth.ts";
+import useSWR from "swr";
+
+export enum EAuthStatus {
+    Loading,
+    Authenticated,
+    Unauthenticated
+}
 
 interface AuthContextType {
+    authState: EAuthStatus;
     user: TUser|null;
-    isAuthenticated: boolean;
-    login: (user: TUser) => void;
+    login: (accessToken: string) => void;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType|undefined>(undefined);
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-    const [user, setUser] = useState<TUser|null>(null);
+    const [accessToken, setAccessToken] = useState<string|null>();
+
+    const {data: user, isLoading, mutate} = useSWR<TUser>(
+        () => accessToken ? apiRoutes.auth.identity[1] : null,
+        {fetcher: authenticatedFetcher, revalidateOnFocus: false}
+    );
+    const {trigger, isMutating} = useSWRMutation(apiRoutes.auth.identity[1], logoutMutator, { revalidate: false });
+
+    useEffect(() => setAccessToken(getAccessToken()), []);
+
+    useEffect(() => { mutate() }, [accessToken]);
+
+    const authState = useMemo<EAuthStatus>(() => {
+        if (isLoading || isMutating) return EAuthStatus.Loading;
+        if (user && accessToken) return EAuthStatus.Authenticated;
+
+        return EAuthStatus.Unauthenticated;
+    }, [isLoading, isMutating, user, accessToken]);
 
     /**
-     * Logs a given user in.
-     * @param user
+     * Sets the authentication token.
+     * @param accessToken
      */
-    const login = (user: TUser): void => {
-        setUser(user);
-
-        // TODO: Store JWT access token when integrating with backend
+    const login = (accessToken: string): void => {
+        saveAccessToken(accessToken);
+        setAccessToken(accessToken);
     }
 
     /**
-     * Logs current user out - removes the currently set identity.
+     * Logs current user out - removes the current access token.
      */
     const logout = (): void => {
-        setUser(null);
+        if (!accessToken) return;
 
-        // TODO: Remove saved access token
+        trigger().then(() => {
+            deleteAccessToken();
+            setAccessToken(null);
+        });
     }
 
     return <AuthContext.Provider value={{
-        user,
-        isAuthenticated: user !== null,
+        authState,
+        user: user || null,
         login, logout
     }}>
         {children}
