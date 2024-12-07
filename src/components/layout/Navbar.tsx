@@ -1,13 +1,14 @@
-import React, {useMemo} from "react";
+import React from "react";
 import {useAuth} from "../../contexts";
 import {Heading} from "@ParkComponents/ui/Heading.tsx";
-import {Text} from "@ParkComponents/ui/Text.tsx";
-import {Button} from "@ParkComponents/ui/Button.tsx";
 import {css} from "../../../styled-system/css";
 import {Container, HStack} from "../../../styled-system/jsx";
-import {Menu, TMenuItem} from "@Components/ui/Menu.tsx";
-import {users} from "../../data/users.ts";
 import {Link} from "react-router-dom";
+import {Menu} from "@Components/ui";
+import {Door01Icon, UserIcon, UserListIcon} from "hugeicons-react";
+import { IconButton } from "@ParkComponents/ui/icon-button";
+import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
+import {Text} from "@ParkComponents/ui";
 
 const navbarStyles = css({
     py: '4',
@@ -19,16 +20,7 @@ const navbarStyles = css({
 });
 
 export const Navbar: React.FC = () => {
-    const {isAuthenticated, user, login, logout} = useAuth();
-
-    const userOptions = useMemo<Array<TMenuItem>>(
-        () => users.map(user => ({
-            type: 'item',
-            id: `user_${user.id}`,
-            text: user.name,
-            onClick: () => login(user)
-        })), []
-    );
+    const {user, logout} = useAuth();
 
     return (
         <div className={navbarStyles}>
@@ -36,16 +28,21 @@ export const Navbar: React.FC = () => {
                 <Link to={'/'}>
                     <Heading size='2xl' fontWeight={"bold"}>Nákupák</Heading>
                 </Link>
-                {isAuthenticated && user
+                {user
                     ? <HStack gap='4'>
-                        <Text as={"span"}>Ahoj, {user.name}!</Text>
-                        <Button variant='subtle' onClick={() => logout()}>Odhlásit se</Button>
+                        <Text as="span" fontWeight="semibold">{`${user.name} ${user.surname}`}</Text>
+                        <Menu
+                            items={[
+                                { type: 'item', id: 'edit', text: 'Upravit profil', icon: <UserListIcon/>, onClick: () => console.log('edit') },
+                                { type: 'item', id: 'd', text: 'Odhlásit se', icon: <Door01Icon/>, onClick: () => logout() },
+                            ]}
+                            trigger={<IconButton size={'lg'} variant={'subtle'} borderRadius="50px">
+                                <HugeIcon icon={<UserIcon/>}/>
+                            </IconButton>}
+                            placement={'bottom-end'}
+                        />
                     </HStack>
-                    : <Menu
-                        items={userOptions}
-                        trigger={<Button>Přihlásit se</Button>}
-                        placement={'bottom-end'}
-                    />
+                    : null
                 }
             </Container>
         </div>

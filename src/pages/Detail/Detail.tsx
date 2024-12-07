@@ -25,6 +25,7 @@ import {
 import {format, isBefore} from "date-fns";
 import {countShoppingListItems} from "@Utils/shopping-list-items/count-items.ts";
 import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
+import useSWR from "swr";
 
 interface DetailProps {
     id: number;
@@ -32,8 +33,7 @@ interface DetailProps {
 
 export const Detail: React.FC<DetailProps> = ({ id }) => {
     const {user} = useAuth();
-    const {shoppingList, removeMember} = useShoppingList(id);
-    const {saveShoppingList, deleteShoppingList} = useShoppingLists();
+    const {} = useSWR(sho)
 
     const navigate = useNavigate();
 

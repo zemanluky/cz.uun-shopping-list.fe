@@ -8,6 +8,9 @@ export default defineConfig({
       '--global-font-body': "'Clash Grotesk', sans-serif"
     }
   },
+  staticCss: {
+    themes: ['light', 'dark']
+  },
   // Whether to use css reset
   preflight: true,
   // preset styles
@@ -16,7 +19,7 @@ export default defineConfig({
     createPreset({
       accentColor: "grass",
       grayColor: "olive",
-      borderRadius: '2xl'
+      borderRadius: '2xl',
     })
   ],
   // Where to look for your css declarations

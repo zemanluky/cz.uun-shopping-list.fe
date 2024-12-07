@@ -1,6 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {TSuccessResponse} from "../types/api.ts";
-import * as querystring from "node:querystring";
 import { Mutex } from "async-mutex";
 import {apiRoutes, THttpMethod} from "../config/api/routes.ts";
 import {TTokenResponse} from "../types/auth.ts";
@@ -101,8 +100,8 @@ function replaceRouteParams(route: string, params: Record<string, string>): stri
  * @param query
  */
 function addQueryParams(route: string, query: Record<string, string>): string {
-    const encodedQuery = querystring.encode(query);
-    return `${route}?${encodedQuery}`;
+    const queryString = new URLSearchParams(query).toString();
+    return `${route}?${queryString}`;
 }
 
 /**
@@ -146,10 +145,7 @@ export const fetcher = async (fetcherKey: TFetcherKey|string) => {
 export const authenticatedFetcher = async <TData = any>(fetcherKey: TFetcherKey|string): Promise<TData> => {
     await refreshTokenMutex.waitForUnlock();
 
-    const finalizedPath = typeof fetcherKey === 'string'
-        ? fetcherKey
-        : getFinalizedPath(fetcherKey)
-    ;
+    const finalizedPath = typeof fetcherKey === 'string' ? fetcherKey : getFinalizedPath(fetcherKey);
     const accessToken = getAccessToken();
 
     return await api.get<TSuccessResponse<TData>>(finalizedPath, {
