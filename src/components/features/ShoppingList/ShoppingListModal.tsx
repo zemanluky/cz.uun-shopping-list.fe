@@ -19,14 +19,14 @@ import {flex} from "../../../../styled-system/patterns";
 import {isEqual, parseISO, startOfToday} from "date-fns";
 import {useNavigate} from "react-router-dom";
 import {mutate} from "swr";
-import {getFinalizedPath} from "@Utils/axios.config.ts";
+import {toaster} from "@Components/layout/Toaster.tsx";
 
 export interface IShoppingListModalRef {
     /**
      * Opens the dialog.
      * @param shoppingList Possibly existing shopping list to edit.
      */
-    openModal: (shoppingList?: TInitialData|null) => void;
+    openModal: (shoppingList?: TInitialData|null, onSave?: VoidFunction) => void;
 }
 
 interface IFormType {
@@ -40,23 +40,25 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
     (_, ref) => {
         const navigate = useNavigate();
         const formRef = useRef<FormInstance<IFormType>>(null);
+        const onSaveRef = useRef<VoidFunction|null>(null);
         const [isOpen, setIsOpen] = useState<boolean>(false);
         const [shoppingList, setShoppingList] = useState<TInitialData|null>(null);
 
         const { isMutating: isCreateMutating, trigger: triggerCreate } = useSWRMutation(
-            () => !shoppingList ? apiRoutes.shoppingList.createShoppingList[1] : null,
+            () => !shoppingList ? apiRoutes.shoppingList.createShoppingList : null,
             addShoppingListMutator
         );
         const { isMutating: isUpdateMutating, trigger: triggerUpdate } = useSWRMutation(
             () => !!shoppingList
-                ? getFinalizedPath([apiRoutes.shoppingList.shoppingListDetail[1], {id: shoppingList._id}])
+                ? [apiRoutes.shoppingList.shoppingListDetail[1], {id: shoppingList._id}]
                 : null,
             updateShoppingListMutator, { populateCache: true, revalidate: false }
         );
 
         useImperativeHandle(ref, () => ({
-            openModal: (shoppingList?: TInitialData|null) => {
+            openModal: (shoppingList?: TInitialData|null, onSave?: VoidFunction) => {
                 if (shoppingList) setShoppingList(shoppingList);
+                onSaveRef.current = onSave || null;
                 setIsOpen(true);
             }
         }));
@@ -90,8 +92,10 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
                 ;
 
                 return triggerUpdate({ id: shoppingList._id, name: values.name, ...updateCompleteBy })
-                    .then(() => {
+                    .then((data) => {
                         cancel();
+                        onSaveRef.current?.();
+                        toaster.success({ title: `Seznam "${data.name}" byl úspěšně upraven!` });
                     });
             }
 
@@ -101,15 +105,18 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
             triggerCreate({ name: values.name, complete_by: values.completeBy })
                 .then(async data => {
                     // prepopulate the cache with the newly created shopping list
-                    return await mutate(
-                        getFinalizedPath([apiRoutes.shoppingList.shoppingListDetail[1], {id: data._id}]),
+                    await mutate(
+                        [apiRoutes.shoppingList.shoppingListDetail[1], {id: data._id}],
                         data, {revalidate: false, populateCache: true}
                     );
+                    return data;
                 })
                 .then((data) => {
                     // close the modal and navigate to the newly created shopping list
                     cancel();
                     navigate(`/${data!._id}`);
+                    onSaveRef.current?.();
+                    toaster.success({ title: `Seznam "${data.name}" byl úspěšně vytvořen!` });
                 })
             ;
         }
@@ -157,7 +164,7 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
                             <Button variant={'subtle'} onClick={() => cancel()} disabled={isCreateMutating || isUpdateMutating}>
                                 Zrušit
                             </Button>,
-                            <Button onClick={submit} disabled={!isValid || isCreateMutating || isUpdateMutating}>
+                            <Button onClick={submit} disabled={!isValid} loading={isCreateMutating || isUpdateMutating}>
                                 Uložit
                             </Button>
                         ]}/>

@@ -30,6 +30,7 @@ export const apiRoutes = {
             addMember: ['POST', '/shopping-list/:id/member'],
             removeMember: ['DELETE', '/shopping-list/:id/member/:memberId'],
             updatePermissions: ['PATCH', '/shopping-list/:id/member/:memberId/permission'],
+            leaveList: ['DELETE', '/shopping-list/:id/member'],
         },
         listShoppingLists: ['GET', '/shopping-list'],
         shoppingListDetail: ['GET', '/shopping-list/:id'],

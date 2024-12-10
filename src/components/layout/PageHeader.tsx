@@ -5,14 +5,18 @@ import {Button} from "@ParkComponents/ui/Button.tsx";
 import {Link} from "react-router-dom";
 import {ArrowLeft02Icon} from "hugeicons-react";
 import {css} from "../../../styled-system/css";
+import {Skeleton} from "@ParkComponents/ui/skeleton.tsx";
+import {Spinner} from "@ParkComponents/ui";
 
 type PageHeaderProps = {
     title: string;
     previousLink?: string;
     actions?: React.ReactNode;
+    loading?: boolean;
+    validating?: boolean;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, actions}) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, actions, loading, validating}) => {
     return <Box py='16' bg='accent.3'>
         <Container display='flex' justifyContent='space-between' alignItems='center' maxW='6xl'>
             <HStack alignItems='center' gap='4'>
@@ -21,7 +25,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, acti
                         <ArrowLeft02Icon size={24} strokeWidth={3} className={css({ color: 'accent.12' })}/>
                     </Link>
                 </Button>}
-                <Heading as='h1' size='5xl' fontWeight='extrabold' lineHeight={1} color='accent.12'>{title}</Heading>
+                <Skeleton isLoaded={!loading} minW="200px">
+                    <Heading as='h1' size='5xl' fontWeight='extrabold' lineHeight={1} color='accent.12'>{title}</Heading>
+                </Skeleton>
+                {validating && <Spinner size="lg" borderWidth="3px"/>}
             </HStack>
             <HStack alignItems='center' gap='2'>
                 {actions || <></>}

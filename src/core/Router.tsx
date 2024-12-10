@@ -1,12 +1,12 @@
 import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
 import {Homepage} from "@Pages/Home/Home.tsx";
 import * as React from "react";
-import {DetailPage} from "@Pages/Detail/DetailPage.tsx";
 import {AppWrapper} from "@Components/layout/AppWrapper.tsx";
 import {Login} from "@Pages/Auth/Login.tsx";
 import {AuthPageWrapper} from "@Components/layout/AuthPageWrapper.tsx";
 import {Register} from "@Pages/Auth/Register.tsx";
 import {PageWrapper} from "@Components/layout/PageWrapper.tsx";
+import {Detail} from "@Pages/Detail/Detail.tsx";
 
 const routes: RouteObject[] = [
     {
@@ -37,7 +37,7 @@ const routes: RouteObject[] = [
                     },
                     {
                         path: ':id',
-                        element: <DetailPage/>
+                        element: <Detail/>
                     }
                 ]
             },

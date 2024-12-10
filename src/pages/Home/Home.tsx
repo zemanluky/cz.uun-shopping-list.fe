@@ -11,8 +11,14 @@ import {AuthenticatedRoute} from "@Components/guard";
 
 export const Homepage: React.FC = () => {
     const [filters, setFilters] = useState<TShoppingListFilters>({search: null, showCompleted: false, completeBefore: null});
+    const [isValidating, setIsValidating] = useState<boolean>(false);
 
     const shoppingListModalRef = useRef<IShoppingListModalRef>(null);
+
+    const onFilterChange = (filters: TShoppingListFilters) => {
+        setFilters(filters);
+        setIsValidating(true);
+    }
 
     return <AuthenticatedRoute>
         <PageHeader
@@ -23,11 +29,12 @@ export const Homepage: React.FC = () => {
                     Nový nákupní seznam
                 </Button>
             }
+            validating={isValidating}
         />
         <Container maxW='6xl' mt='8'>
             <VStack gap='6'>
-                <ShoppingListFilters onFilterChange={(filters) => setFilters(filters)} w={'100%'}/>
-                <ShoppingListGrid w={'100%'} filter={filters}/>
+                <ShoppingListFilters onFilterChange={onFilterChange} w={'100%'}/>
+                <ShoppingListGrid w={'100%'} filter={filters} onViewValidation={setIsValidating}/>
             </VStack>
         </Container>
         <ShoppingListModal ref={shoppingListModalRef}/>

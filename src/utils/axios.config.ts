@@ -107,7 +107,7 @@ function addQueryParams(route: string, query: Record<string, string>): string {
 /**
  * Fetches data from the given API endpoint from given path, route parameters and query parameters.
  */
-type TFetcherKey = [string, (Record<string,string>|null)?, (Record<string,string>|null)?];
+export type TFetcherKey = [string, (Record<string,string>|null)?, (Record<string,string>|null)?];
 
 /**
  * Returns the finalized path for the given fetcher key.
@@ -155,7 +155,7 @@ export const authenticatedFetcher = async <TData = any>(fetcherKey: TFetcherKey|
     }).then((response) => transformResponse(response));
 }
 
-type TMutatorKey = [THttpMethod, ...TFetcherKey];
+export type TMutatorKey = [THttpMethod, ...TFetcherKey];
 
 /**
  * Mutates data on the given API endpoint with authentication headers.

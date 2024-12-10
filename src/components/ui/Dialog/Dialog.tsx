@@ -14,7 +14,7 @@ const dialogStyles = css({
 
 export const Dialog: React.FC<DialogProps> = ({isOpen, children}) => {
     return (
-        <ParkDialog.Root open={isOpen}>
+        <ParkDialog.Root open={isOpen} lazyMount>
             <ParkDialog.Backdrop p={4} />
             <ParkDialog.Positioner>
                 <ParkDialog.Content className={dialogStyles}>{children}</ParkDialog.Content>

@@ -1,8 +1,8 @@
 import React, {useMemo, useState} from "react";
 import {Checkbox, Heading} from "@ParkComponents/ui";
 import {Box, BoxProps, HStack, VStack} from "../../../../styled-system/jsx";
-import {TShoppingListItem} from "../../../types/shopping-list.ts";
 import {ShoppingListItem} from "@Components/features/ShoppingListItem/ShoppingListItem.tsx";
+import {TShoppingListItem} from "../../../types/shopping-list-item.ts";
 
 interface ShoppingListItemsProps extends BoxProps {
     items: Array<TShoppingListItem>,
@@ -13,7 +13,7 @@ export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, r
     const [showIncompleteOnly, setShowIncompleteOnly] = useState<boolean>(false);
     const filteredItems = useMemo(() => items.filter(item => {
         if (!showIncompleteOnly) return item;
-        return item.completed_at === null;
+        return item.completed === null;
     }), [items, showIncompleteOnly]);
 
     return <Box {...boxProps}>
@@ -29,7 +29,7 @@ export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, r
         <VStack gap={2}>
             {!readOnly ? <ShoppingListItem/> : null}
             {filteredItems.map(item =>
-                <ShoppingListItem key={item.id} item={item} readOnly={readOnly} />
+                <ShoppingListItem key={item._id} item={item} readOnly={readOnly} />
             )}
         </VStack>
     </Box>

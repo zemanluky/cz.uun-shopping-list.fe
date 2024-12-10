@@ -17,7 +17,7 @@ const appStyles = css({
 export const App: React.FC = () => {
   return (
       <Providers>
-          <SWRConfig value={{fetcher: authenticatedFetcher}}>
+          <SWRConfig value={{fetcher: authenticatedFetcher, revalidateOnFocus: false}}>
               <div className={appStyles}>
                   <Router/>
                   <Toaster/>
