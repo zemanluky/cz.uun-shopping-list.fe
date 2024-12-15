@@ -2,6 +2,8 @@ import {TUser} from "./user.ts";
 import {TShoppingListItem} from "./shopping-list-item.ts";
 import {TShoppingListMember} from "./shopping-list-member.ts";
 
+export const temporaryShoppingListId = 'temp';
+
 export type TShoppingListItemStatistics = {
     total_items: number;
     completed_items: number;

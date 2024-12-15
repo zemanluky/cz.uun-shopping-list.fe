@@ -5,11 +5,12 @@ import {ShoppingListItem} from "@Components/features/ShoppingListItem/ShoppingLi
 import {TShoppingListItem} from "../../../types/shopping-list-item.ts";
 
 interface ShoppingListItemsProps extends BoxProps {
+    shoppingListId: string;
     items: Array<TShoppingListItem>,
     readOnly?: boolean
 }
 
-export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, readOnly, ...boxProps}) => {
+export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({shoppingListId, items, readOnly, ...boxProps}) => {
     const [showIncompleteOnly, setShowIncompleteOnly] = useState<boolean>(false);
     const filteredItems = useMemo(() => items.filter(item => {
         if (!showIncompleteOnly) return item;
@@ -27,9 +28,9 @@ export const ShoppingListItemList: React.FC<ShoppingListItemsProps> = ({items, r
             }
         </HStack>
         <VStack gap={2}>
-            {!readOnly ? <ShoppingListItem/> : null}
+            {!readOnly ? <ShoppingListItem shoppingListId={shoppingListId}/> : null}
             {filteredItems.map(item =>
-                <ShoppingListItem key={item._id} item={item} readOnly={readOnly} />
+                <ShoppingListItem shoppingListId={shoppingListId} key={item._id} item={item} readOnly={readOnly} />
             )}
         </VStack>
     </Box>

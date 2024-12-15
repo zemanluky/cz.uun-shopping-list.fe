@@ -22,6 +22,7 @@ import {Spinner} from "@ParkComponents/ui";
 import {fullName} from "@Utils/user.helper.ts";
 import {IShoppingListActionModalsRef, ShoppingListActionModals} from "@Components/features/ShoppingList/ShoppingListActionModals.tsx";
 import {toaster} from "@Components/layout/Toaster.tsx";
+import {ShoppingListItemList} from "@Components/features/ShoppingListItem/ShoppingListItemList.tsx";
 
 export const Detail: React.FC = () => {
     const shoppingListActionsRef = useRef<IShoppingListActionModalsRef>(null);
@@ -119,7 +120,7 @@ export const Detail: React.FC = () => {
                     </VStack>
                 </Grid>
                 <HStack gap='8' mt='8' alignItems='flex-start'>
-                    {/*<ShoppingListItemList items={shoppingList.items} w={'2/3'} readOnly={completed}/>*/}
+                    <ShoppingListItemList items={shoppingList.items} w={'2/3'} readOnly={completed} shoppingListId={shoppingList._id}/>
                     {/*<MemberList members={shoppingList.members} showAddModal={user!._id === shoppingList.author._id} w={'1/3'} readOnly={completed}/>*/}
                 </HStack>
             </Container>
