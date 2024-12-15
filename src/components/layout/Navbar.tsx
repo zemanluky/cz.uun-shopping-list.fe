@@ -2,7 +2,7 @@ import React from "react";
 import {useAuth} from "../../contexts";
 import {Heading} from "@ParkComponents/ui/Heading.tsx";
 import {css} from "../../../styled-system/css";
-import {Container, HStack} from "../../../styled-system/jsx";
+import {Container, HStack, VStack} from "../../../styled-system/jsx";
 import {Link} from "react-router-dom";
 import {Menu} from "@Components/ui";
 import {Door01Icon, UserIcon, UserListIcon} from "hugeicons-react";
@@ -30,7 +30,10 @@ export const Navbar: React.FC = () => {
                 </Link>
                 {user
                     ? <HStack gap='4'>
-                        <Text as="span" fontWeight="semibold">{`${user.name} ${user.surname}`}</Text>
+                        <VStack gap={1} alignItems="flex-end">
+                            <Text as="span" fontWeight="semibold" lineHeight={1}>{`${user.name} ${user.surname}`}</Text>
+                            <Text as="span" size="xs" lineHeight={1} color="fg.subtle">@{user.username}</Text>
+                        </VStack>
                         <Menu
                             items={[
                                 { type: 'item', id: 'edit', text: 'Upravit profil', icon: <UserListIcon/>, onClick: () => console.log('edit') },
