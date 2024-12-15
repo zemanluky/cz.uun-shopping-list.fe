@@ -15,11 +15,6 @@ export const Homepage: React.FC = () => {
 
     const shoppingListModalRef = useRef<IShoppingListModalRef>(null);
 
-    const onFilterChange = (filters: TShoppingListFilters) => {
-        setFilters(filters);
-        setIsValidating(true);
-    }
-
     return <AuthenticatedRoute>
         <PageHeader
             title="Tvoje nákupní seznamy"
@@ -33,7 +28,7 @@ export const Homepage: React.FC = () => {
         />
         <Container maxW='6xl' mt='8'>
             <VStack gap='6'>
-                <ShoppingListFilters onFilterChange={onFilterChange} w={'100%'}/>
+                <ShoppingListFilters onFilterChange={setFilters} w={'100%'}/>
                 <ShoppingListGrid w={'100%'} filter={filters} onViewValidation={setIsValidating}/>
             </VStack>
         </Container>

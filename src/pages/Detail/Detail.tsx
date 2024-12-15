@@ -84,7 +84,7 @@ export const Detail: React.FC = () => {
         <PageHeader
             title={shoppingList?.name || '...'}
             actions={!completed ? renderHeaderActions() : undefined}
-            previousLink='/'
+            previousLink={true}
             loading={isLoading}
         />
         {!isLoading && shoppingList

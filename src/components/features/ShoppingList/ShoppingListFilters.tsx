@@ -1,10 +1,12 @@
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Grid, GridProps} from "../../../../styled-system/jsx";
 import {Field, SingleDateInput} from "@Components/ui/Form";
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {Checkbox, Heading} from "@ParkComponents/ui";
 import * as R from "remeda";
 import {parseDate} from "@ark-ui/react";
+import { useSearchParams } from "react-router-dom";
+import {formatISO, parseISO} from "date-fns";
 
 export type TShoppingListFilters = {
     search: string|null;
@@ -17,6 +19,7 @@ interface IProps extends GridProps {
 }
 
 export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridProps}) => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const [filter, setFilter] = useState<TShoppingListFilters>({
         search: null,
         completeBefore: null,
@@ -24,6 +27,38 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
     });
 
     const debounceFilterChange = useMemo(() => R.debounce(onFilterChange, {waitMs: 300, timing: "trailing"}), []);
+
+    // set the initial filter values from search params
+    useEffect(() => {
+        const search = searchParams.get('search');
+        const completeBefore = searchParams.get('completeBefore');
+        const showCompleted = searchParams.get('showCompleted');
+
+        const initialFilter: TShoppingListFilters = {
+            search: search || null,
+            completeBefore: completeBefore ? parseISO(completeBefore) : null,
+            showCompleted: showCompleted === 'true'
+        };
+
+        setFilter(initialFilter);
+        onFilterChange(initialFilter);
+    }, []);
+
+    /**
+     * Updates the search params with the new filter.
+     * @param newFilter
+     */
+    const updateSearchParams = (newFilter: TShoppingListFilters) => {
+        const { search, completeBefore, showCompleted } = newFilter;
+
+        const newSearchParams: Record<string, string|Array<string>> = {};
+
+        if (search) newSearchParams['search'] = search;
+        if (completeBefore) newSearchParams['completeBefore'] = formatISO(completeBefore);
+        if (showCompleted) newSearchParams['showCompleted'] = 'true';
+
+        setSearchParams(newSearchParams, { replace: false });
+    };
 
     /**
      * Updates filter's value on a given key.
@@ -33,6 +68,7 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
     const changeFilter = <TKey extends keyof TShoppingListFilters>(key: TKey, value: TShoppingListFilters[TKey]) => {
         const updatedFilter = {...filter, [key]: value};
         setFilter(updatedFilter);
+        updateSearchParams(updatedFilter);
         debounceFilterChange.call(updatedFilter);
     }
 

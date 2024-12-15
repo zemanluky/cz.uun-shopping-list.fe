@@ -10,7 +10,7 @@ import {Spinner} from "@ParkComponents/ui";
 
 type PageHeaderProps = {
     title: string;
-    previousLink?: string;
+    previousLink?: string|boolean;
     actions?: React.ReactNode;
     loading?: boolean;
     validating?: boolean;
@@ -20,11 +20,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, acti
     return <Box py='16' bg='accent.3'>
         <Container display='flex' justifyContent='space-between' alignItems='center' maxW='6xl'>
             <HStack alignItems='center' gap='4'>
-                {previousLink && <Button variant='subtle' size='xl' css={{ aspectRatio: '1/1', borderRadius: '[50%]', p: 0 }} asChild>
-                    <Link to={previousLink}>
-                        <ArrowLeft02Icon size={24} strokeWidth={3} className={css({ color: 'accent.12' })}/>
-                    </Link>
-                </Button>}
+                {(previousLink === true || typeof previousLink === "string")
+                    && <Button variant='subtle' size='xl' css={{ aspectRatio: '1/1', borderRadius: '[50%]', p: 0 }} asChild>
+                        <Link to={typeof previousLink === "string" ? previousLink : -1 as any}>
+                            <ArrowLeft02Icon size={24} strokeWidth={3} className={css({ color: 'accent.12' })}/>
+                        </Link>
+                    </Button>
+                }
                 <Skeleton isLoaded={!loading} minW="200px">
                     <Heading as='h1' size='5xl' fontWeight='extrabold' lineHeight={1} color='accent.12'>{title}</Heading>
                 </Skeleton>
