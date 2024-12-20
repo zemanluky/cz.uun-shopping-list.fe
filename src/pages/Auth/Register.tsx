@@ -2,6 +2,7 @@ import React from "react";
 import {PublicOnlyRoute} from "@Components/guard";
 import {Box, VStack} from "../../../styled-system/jsx";
 import {Heading, Text} from "@ParkComponents/ui";
+import {RegistrationForm} from "@Components/features/Auth/RegistrationForm.tsx";
 
 export const Register: React.FC = () => {
     return <PublicOnlyRoute>
@@ -10,7 +11,7 @@ export const Register: React.FC = () => {
                 <Heading as="h2" size="3xl">Vytvořte si účet</Heading>
                 <Text>Začněte si zaznamenávat nákupní seznamy hned. Zaregistrujte se a můžeme začít!</Text>
             </VStack>
-
+            <RegistrationForm/>
         </Box>
     </PublicOnlyRoute>
 };

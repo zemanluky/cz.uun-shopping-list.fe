@@ -15,7 +15,7 @@ export const Field: React.FC<IProps> = ({label, errors, children, type}) => {
     const errorsComponent = useMemo<ReactNode|null>(() => {
         if (!hasError) return null;
 
-        return <ParkField.ErrorText>
+        return <ParkField.ErrorText flexDir="column" alignItems="flex-start" gap={0}>
             {errors?.map(err => <span key={err}>{err}</span>)}
         </ParkField.ErrorText>
     }, [errors, hasError]);
