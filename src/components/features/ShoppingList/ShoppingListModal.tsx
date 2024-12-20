@@ -5,7 +5,7 @@ import {Form, Field as FormField, FormInstance} from "houseform";
 import {Dialog, DialogHeading, DialogButtons, DialogContent} from "@Components/ui/Dialog";
 import {Field, SingleDateInput} from "@Components/ui/Form";
 import {Input} from "@ParkComponents/ui/Input.tsx";
-import {z} from "@Utils/zod.config.ts";
+import {z} from "@Utils/zod.utils.ts";
 import {css} from "../../../../styled-system/css";
 import { parseDate } from "@ark-ui/react";
 import useSWRMutation from "swr/mutation";

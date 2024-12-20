@@ -15,6 +15,7 @@ import {
 } from "../../../data/mutator/shopping-list-item.ts";
 import {TFetcherKey} from "@Utils/axios.config.ts";
 import {toaster} from "@Components/layout/Toaster.tsx";
+import {fullName} from "@Utils/user.helper.ts";
 
 interface ShoppingListItemProps extends HstackProps {
     shoppingListId: string;
@@ -133,7 +134,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
                 <Input id={'create_item_amount'} placeholder={'Množství'} size={'sm'} value={form.amount}
                        onChange={(e) => updateFormField('amount', e.target.value)}
                        onKeyDown={handleKeySave} disabled={readOnly} ref={amountInputRef}
-                       className={css({minW: "50px", maxW: "150px", w: "auto", flexShrink: 0})}
+                       className={css({minW: "50px", maxW: "200px", w: "auto", flexShrink: 0})}
                 />
                 <Input id={'create_item_name'} placeholder={'Název'} size={'sm'} value={form.name}
                        onChange={(e) => updateFormField('name', e.target.value)}
@@ -148,6 +149,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
     // Render the item detail
     return <HStack {...hstackProps} p={4} bg={item.completed !== null ? "bg.emphasized" : "bg.subtle"}
                    shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
+                   minH="72px"
     >
         <HStack gap={4}>
             {!readOnly
@@ -162,7 +164,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
         {!readOnly
             ? <HStack gap={2}>
                 {completedByUser !== undefined
-                    ? <Text>Dokončil: {completedByUser.name}</Text>
+                    ? <Text>Dokončil: {fullName(completedByUser)}</Text>
                     : <>
                         <Button p={0} variant={'subtle'} onClick={() => setEditMode(true)}>
                             <PencilEdit01Icon strokeWidth={2} />

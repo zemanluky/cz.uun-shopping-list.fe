@@ -13,3 +13,7 @@ i18next.init({
 z.setErrorMap(zodI18nMap);
 
 export { z };
+
+export function transformToNull<T extends any>(value: T|null): T|null {
+    return !!value ? value : null;
+}

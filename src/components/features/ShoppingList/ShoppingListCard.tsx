@@ -68,7 +68,9 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDe
 
     const navigateToDetail = (): void => navigate(`/${shoppingList._id}`);
 
-    return <Grid p='4' gap='6' bg={'bg.subtle'} shadow={'md'} borderRadius={'2xl'} gridTemplateColumns={'2fr 3fr'} position={'relative'}>
+    return <Grid p='4' gap='6' bg={'bg.subtle'} shadow={{ _light: 'md', _dark: 'none' }}
+                 borderRadius={'2xl'} gridTemplateColumns={'2fr 3fr'} position={'relative'}
+    >
         <Box className={css(center.raw(), {bg: 'bg.muted', borderRadius: 'xl', minH: '200px', minW: '100px'})}>
             <Album02Icon size={32} strokeWidth={3}/>
         </Box>
