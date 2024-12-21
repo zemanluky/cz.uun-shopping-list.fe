@@ -12,6 +12,7 @@ export type TShoppingListFilters = {
     search: string|null;
     completeBefore: Date|null;
     showCompleted: boolean;
+    includeOnly: EShoppingListView;
 }
 
 interface IProps extends GridProps {
@@ -23,7 +24,8 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
     const [filter, setFilter] = useState<TShoppingListFilters>({
         search: null,
         completeBefore: null,
-        showCompleted: false
+        showCompleted: false,
+        includeOnly: EShoppingListView.all
     });
 
     const debounceFilterChange = useMemo(() => R.debounce(onFilterChange, {waitMs: 300, timing: "trailing"}), []);
@@ -33,11 +35,13 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
         const search = searchParams.get('search');
         const completeBefore = searchParams.get('completeBefore');
         const showCompleted = searchParams.get('showCompleted');
+        const includeOnly = searchParams.get('includeOnly');
 
         const initialFilter: TShoppingListFilters = {
             search: search || null,
             completeBefore: completeBefore ? parseISO(completeBefore) : null,
-            showCompleted: showCompleted === 'true'
+            showCompleted: showCompleted === 'true',
+            includeOnly: includeOnly ? includeOnly as EShoppingListView : EShoppingListView.all
         };
 
         setFilter(initialFilter);
@@ -54,11 +58,13 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
         const newSearchParams: Record<string, string|Array<string>> = {};
 
         if (search) newSearchParams['search'] = search;
-        if (completeBefore) newSearchParams['completeBefore'] = formatISO(completeBefore);
         if (showCompleted) newSearchParams['showCompleted'] = 'true';
+        if (completeBefore) newSearchParams['completeBefore'] = formatISO(completeBefore);
+        if (includeOnly !== EShoppingListView.all) newSearchParams['includeOnly'] = includeOnly;
 
         setSearchParams(newSearchParams, { replace: false });
     };
+    const debouncedUpdateSearchParams = useMemo(() => R.debounce(updateSearchParams, {waitMs: 300, timing: "trailing"}), []);
 
     /**
      * Updates filter's value on a given key.
@@ -68,7 +74,7 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
     const changeFilter = <TKey extends keyof TShoppingListFilters>(key: TKey, value: TShoppingListFilters[TKey]) => {
         const updatedFilter = {...filter, [key]: value};
         setFilter(updatedFilter);
-        updateSearchParams(updatedFilter);
+        debouncedUpdateSearchParams.call(updatedFilter);
         debounceFilterChange.call(updatedFilter);
     }
 

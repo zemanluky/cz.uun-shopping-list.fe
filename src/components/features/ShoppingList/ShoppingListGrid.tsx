@@ -5,7 +5,7 @@ import {TShoppingListFilters} from "@Components/features/ShoppingList/ShoppingLi
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
 import {apiRoutes} from "../../../config/api/routes.ts";
-import {EShoppingListView, TShoppingListOverview} from "../../../types/shopping-list.ts";
+import {TShoppingListOverview} from "../../../types/shopping-list.ts";
 import {Arguments} from "swr";
 import {TPaginatedData} from "../../../types/api.ts";
 import * as R from "remeda";
@@ -22,11 +22,10 @@ const PAGE_SIZE: number = 20;
 
 interface IProps extends Omit<GridProps, 'filter'> {
     filter?: TShoppingListFilters,
-    view?: EShoppingListView,
     onViewValidation?: (validating: boolean) => void
 }
 
-export const ShoppingListGrid: React.FC<IProps> = ({filter, view = EShoppingListView.all, onViewValidation, ...gridProps}) => {
+export const ShoppingListGrid: React.FC<IProps> = ({filter, onViewValidation, ...gridProps}) => {
     // prepare query filters
     const queryFilters = useMemo(() => {
         const search = filter && filter.search ? { search: filter.search } : {};
@@ -34,14 +33,15 @@ export const ShoppingListGrid: React.FC<IProps> = ({filter, view = EShoppingList
             completeBefore: formatISO(filter.completeBefore)
         } : {};
         const includeCompleted = filter ? { includeCompleted: filter.showCompleted.toString() } : {};
+        const includeOnly = filter ? { includeOnly: filter.includeOnly } : {};
 
         return {
             ...search,
+            ...includeOnly,
             ...completeBefore,
-            includeOnly: view,
             ...includeCompleted,
         };
-    }, [filter, view]);
+    }, [filter]);
 
     // function that generates the next key for SWR and includes the query filters
     const getSwrKey = useCallback<SWRInfiniteKeyLoader<TPaginatedData<TShoppingListOverview>, Arguments>>(
