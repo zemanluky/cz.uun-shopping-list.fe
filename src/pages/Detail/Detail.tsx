@@ -3,9 +3,9 @@ import {PageHeader} from "@Components/layout";
 import {Button} from "@ParkComponents/ui/Button.tsx";
 import {
     Album02Icon, CalendarSetting01Icon, CalendarCheckOut01Icon, CheckListIcon, CheckmarkCircle02Icon, UserEdit01Icon,
-    MoreVerticalCircle01Icon, PencilEdit01Icon, Delete02Icon, Door01Icon
+    MoreVerticalCircle01Icon, PencilEdit01Icon, Delete02Icon, Door01Icon, UserGroupIcon
 } from "hugeicons-react";
-import {Box, Container, Grid, HStack, VStack} from "../../../styled-system/jsx";
+import {Box, Container, Grid, VStack} from "../../../styled-system/jsx";
 import {center} from "../../../styled-system/patterns";
 import {css} from "../../../styled-system/css";
 import {useAuth} from "../../contexts";
@@ -23,9 +23,12 @@ import {fullName} from "@Utils/user.helper.ts";
 import {IShoppingListActionModalsRef, ShoppingListActionModals} from "@Components/features/ShoppingList/ShoppingListActionModals.tsx";
 import {toaster} from "@Components/layout/Toaster.tsx";
 import {ShoppingListItemList} from "@Components/features/ShoppingListItem/ShoppingListItemList.tsx";
+import {MemberListDrawer, IMemberListRef} from "@Components/features/ShoppingListMember/MemberListDrawer.tsx";
+import {AuthenticatedRoute} from "@Components/guard";
 
 export const Detail: React.FC = () => {
     const shoppingListActionsRef = useRef<IShoppingListActionModalsRef>(null);
+    const shoppingListMemberDrawerRef = useRef<IMemberListRef>(null);
     const navigate = useNavigate();
     const {id} = useParams();
     const {user} = useAuth();
@@ -59,6 +62,11 @@ export const Detail: React.FC = () => {
                 <Menu
                     items={[
                         {
+                            type: 'item', id: 'show-members', text: 'Upravit členy', icon: <UserGroupIcon/>,
+                            onClick: () => shoppingListMemberDrawerRef.current?.openDrawer()
+                        },
+                        { type: 'separator', id: 'sep' },
+                        {
                             type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>,
                             onClick: () => shoppingListActionsRef.current?.openEditModal(shoppingList)
                         },
@@ -69,6 +77,7 @@ export const Detail: React.FC = () => {
                             )
                         },
                     ]}
+                    placement={'bottom-end'}
                     trigger={<Button size={'xl'} variant={'subtle'} p={0}>
                         <MoreVerticalCircle01Icon strokeWidth={2}/>
                     </Button>}
@@ -81,7 +90,7 @@ export const Detail: React.FC = () => {
         </Button>
     }
 
-    return (<>
+    return (<AuthenticatedRoute>
         <PageHeader
             title={shoppingList?.name || '...'}
             actions={!completed ? renderHeaderActions() : undefined}
@@ -119,13 +128,16 @@ export const Detail: React.FC = () => {
                         />
                     </VStack>
                 </Grid>
-                <HStack gap='8' mt='8' alignItems='flex-start'>
-                    <ShoppingListItemList items={shoppingList.items} w={'2/3'} readOnly={completed} shoppingListId={shoppingList._id}/>
-                    {/*<MemberList members={shoppingList.members} showAddModal={user!._id === shoppingList.author._id} w={'1/3'} readOnly={completed}/>*/}
-                </HStack>
+                <ShoppingListItemList mt={8} items={shoppingList.items} readOnly={completed} shoppingListId={shoppingList._id}/>
+                <MemberListDrawer
+                    shoppingList={shoppingList}
+                    members={shoppingList.members}
+                    ref={shoppingListMemberDrawerRef}
+                    canEdit={user?._id === shoppingList.author._id}
+                />
             </Container>
             : <Spinner/>
         }
         <ShoppingListActionModals ref={shoppingListActionsRef}/>
-    </>);
+    </AuthenticatedRoute>);
 }
