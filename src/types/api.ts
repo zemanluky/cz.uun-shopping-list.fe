@@ -30,4 +30,4 @@ export type TErrorResponse = TBaseResponse & {
     }
 };
 
-export type TPaginatedData<TData = any> = IPaginatedParameters & { items: TData };
+export type TPaginatedData<TData = any> = IPaginatedParameters & { items: Array<TData> };
