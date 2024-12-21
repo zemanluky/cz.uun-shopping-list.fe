@@ -17,9 +17,9 @@ export default defineConfig({
   presets: [
     '@pandacss/preset-base',
     createPreset({
-      accentColor: "grass",
-      grayColor: "olive",
-      borderRadius: '2xl',
+      accentColor: "iris",
+      grayColor: "slate",
+      borderRadius: '2xl'
     })
   ],
   // Where to look for your css declarations
