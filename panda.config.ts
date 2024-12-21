@@ -6,6 +6,9 @@ export default defineConfig({
   globalCss: {
     html: {
       '--global-font-body': "'Clash Grotesk', sans-serif"
+    },
+    '*': {
+      scrollbarColor: "token(colors.accent.6) token(colors.bg.canvas)"
     }
   },
   staticCss: {
