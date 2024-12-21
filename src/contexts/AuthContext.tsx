@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {TUser} from "../types/user.ts";
-import {deleteAccessToken, getAccessToken, saveAccessToken} from "@Utils/access-token.utils.ts";
+import {deleteAccessToken, getAccessToken, saveAccessToken} from "@Utils/local-storage.utils.ts";
 import {authenticatedFetcher} from "@Utils/axios.config.ts";
 import {apiRoutes} from "../config/api/routes.ts";
 import useSWRMutation from "swr/mutation";

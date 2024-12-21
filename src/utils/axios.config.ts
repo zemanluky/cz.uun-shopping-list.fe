@@ -3,7 +3,7 @@ import {TSuccessResponse} from "../types/api.ts";
 import { Mutex } from "async-mutex";
 import {apiRoutes, THttpMethod} from "../config/api/routes.ts";
 import {TTokenResponse} from "../types/auth.ts";
-import {deleteAccessToken, getAccessToken, saveAccessToken} from "@Utils/access-token.utils.ts";
+import {deleteAccessToken, getAccessToken, saveAccessToken} from "@Utils/local-storage.utils.ts";
 
 const IGNORED_REFRESH_ENDPOINTS: string[] = [
     apiRoutes.auth.refresh[1],

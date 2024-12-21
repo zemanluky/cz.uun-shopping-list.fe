@@ -10,8 +10,7 @@ const appStyles = css({
     minHeight: "100vh",
     '@supports (min-height: 100svh)': {
         minHeight: '100svh'
-    },
-    colorScheme: 'dark'
+    }
 })
 
 export const App: React.FC = () => {
