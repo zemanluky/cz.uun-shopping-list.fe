@@ -2,7 +2,7 @@ import React, {ReactNode} from "react";
 import {Dialog as ParkDialog} from "@ParkComponents/ui";
 import {css} from "../../../../styled-system/css";
 
-interface DialogProps {
+interface DialogProps extends ParkDialog.RootProps {
     isOpen: boolean;
     children: ReactNode;
 }
@@ -12,9 +12,9 @@ const dialogStyles = css({
     md: { minW: '500px', maxW: '4xl' }
 })
 
-export const Dialog: React.FC<DialogProps> = ({isOpen, children}) => {
+export const Dialog: React.FC<DialogProps> = ({isOpen, children, ...dialogProps}) => {
     return (
-        <ParkDialog.Root open={isOpen} lazyMount>
+        <ParkDialog.Root {...dialogProps} open={isOpen} lazyMount>
             <ParkDialog.Backdrop p={4} />
             <ParkDialog.Positioner>
                 <ParkDialog.Content className={dialogStyles}>{children}</ParkDialog.Content>
