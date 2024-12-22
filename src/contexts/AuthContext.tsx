@@ -25,6 +25,7 @@ const AuthContext = createContext<AuthContextType|undefined>(undefined);
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
     const [accessToken, setAccessToken] = useState<string|null>();
+    const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
     const {data: user, isLoading, mutate} = useSWR<TUser>(
         () => accessToken ? apiRoutes.auth.identity[1] : null,
@@ -32,16 +33,19 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     );
     const {trigger, isMutating} = useSWRMutation(apiRoutes.auth.identity[1], logoutMutator, { revalidate: false });
 
-    useEffect(() => setAccessToken(getAccessToken()), []);
+    useEffect(() => {
+        setAccessToken(getAccessToken());
+        setIsInitialized(true);
+    }, []);
 
-    useEffect(() => { mutate() }, [accessToken]);
+    useEffect(() => {mutate()}, [accessToken]);
 
     const authState = useMemo<EAuthStatus>(() => {
-        if (isLoading || isMutating) return EAuthStatus.Loading;
+        if (isLoading || isMutating || !isInitialized) return EAuthStatus.Loading;
         if (user && accessToken) return EAuthStatus.Authenticated;
 
         return EAuthStatus.Unauthenticated;
-    }, [isLoading, isMutating, user, accessToken]);
+    }, [isLoading, isMutating, user, accessToken, isInitialized]);
 
     /**
      * Sets the authentication token.
