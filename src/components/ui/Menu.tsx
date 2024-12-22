@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import {Menu as ParkMenu} from "@ParkComponents/ui";
 import {HStack} from "../../../styled-system/jsx";
 import {UnfoldMoreIcon} from "hugeicons-react";
@@ -79,15 +79,10 @@ export const Menu: React.FC<MenuProps> = ({items, trigger, placement}) => {
         }
     }
 
-    const float = useMemo(() =>
-        placement && (placement.includes('left') || placement.includes('end')) ? 'right' : 'left',
-        [placement]
-    );
-
-    return <ParkMenu.Root positioning={{placement: placement, flip: true, strategy: "absolute"}}>
+    return <ParkMenu.Root positioning={{placement: placement, flip: true }}>
         <ParkMenu.Trigger asChild>{trigger}</ParkMenu.Trigger>
-        <ParkMenu.Positioner>
-            <ParkMenu.Content float={float}>
+        <ParkMenu.Positioner display="flex">
+            <ParkMenu.Content>
                 {items.map(item => renderItem(item))}
             </ParkMenu.Content>
         </ParkMenu.Positioner>
