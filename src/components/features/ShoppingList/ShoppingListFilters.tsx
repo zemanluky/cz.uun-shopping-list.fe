@@ -142,8 +142,11 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
                 { id: EShoppingListView.own, label: 'Moje seznamy' },
                 { id: EShoppingListView.shared, label: 'Seznamy kamarádů' },
             ]}
+            orientation="horizontal"
             activeItem={includeOnly}
             onItemChange={(item) => changeFilter('includeOnly', item as EShoppingListView)}
+            height="auto"
+            maxW="100%"
             mt={2}
         />
         <Dialog isOpen={isFilterDialogOpen}>

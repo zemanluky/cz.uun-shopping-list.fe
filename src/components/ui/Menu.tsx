@@ -4,6 +4,9 @@ import {HStack} from "../../../styled-system/jsx";
 import {UnfoldMoreIcon} from "hugeicons-react";
 import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 import {Placement} from "@floating-ui/utils";
+import {Link} from "react-router-dom";
+import {cx} from "../../../styled-system/css";
+import {flex} from "../../../styled-system/patterns";
 
 interface BaseMenuItem {
     type: 'separator'|'item'|'nested',
@@ -18,7 +21,8 @@ interface FinalMenuItem extends BaseMenuItem {
     type: 'item',
     text: string,
     icon?: React.ReactElement,
-    onClick: () => void;
+    onClick?: () => void;
+    link?: string;
 }
 
 interface NestedMenuItem extends BaseMenuItem {
@@ -47,14 +51,24 @@ export const Menu: React.FC<MenuProps> = ({items, trigger, placement}) => {
             case 'separator':
                 return <ParkMenu.Separator key={menuItem.id}/>;
             case 'item':
-                return <ParkMenu.Item value={menuItem.id} key={menuItem.id} onClick={() => menuItem.onClick()}>
-                    <HStack alignItems='center' gap='4'>
-                        {!!menuItem.icon
-                            ? <HugeIcon icon={menuItem.icon}/>
-                            : null
-                        }
-                        {menuItem.text}
-                    </HStack>
+                return <ParkMenu.Item value={menuItem.id} key={menuItem.id} onClick={() => menuItem.onClick?.()}>
+                    {!!menuItem.link
+                        ? <Link to={menuItem.link} className={cx(flex({ align: 'center', gap: 4 }))}>
+                            {!!menuItem.icon
+                                ? <HugeIcon icon={menuItem.icon}/>
+                                : null
+                            }
+                            {menuItem.text}
+                        </Link>
+                        : <HStack alignItems='center' gap='4'>
+                            {!!menuItem.icon
+                                ? <HugeIcon icon={menuItem.icon}/>
+                                : null
+                            }
+                            {menuItem.text}
+                        </HStack>
+                    }
+
                 </ParkMenu.Item>
             case "nested":
                 return <ParkMenu.Root key={menuItem.id}>

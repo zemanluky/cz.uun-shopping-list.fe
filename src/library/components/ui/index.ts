@@ -10,3 +10,4 @@ export * from "./Select.tsx";
 export * from "./drawer.tsx";
 export * from "./combobox.tsx";
 export * from "./segment-group.tsx";
+export * from "./tabs.tsx";

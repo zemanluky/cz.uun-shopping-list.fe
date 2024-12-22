@@ -12,7 +12,7 @@ interface IProps extends ParkSegmentGroup.RootProps {
     onItemChange: (id: string) => void
 }
 
-export const SegmentGroup: React.FC<IProps> = ({items, activeItem, onItemChange, ...rootProps}) => {
+export const SegmentGroup: React.FC<IProps> = ({items, activeItem, onItemChange, orientation, ...rootProps}) => {
     const value = useMemo(
         () => items.find((item) => item.id === activeItem) || items[0],
         [items, activeItem]
@@ -20,14 +20,15 @@ export const SegmentGroup: React.FC<IProps> = ({items, activeItem, onItemChange,
 
     return <ParkSegmentGroup.Root
         {...rootProps}
+        overflowX="auto"
+        orientation={orientation}
         onValueChange={(valueChange) => onItemChange(valueChange.value)}
         value={value.id}
-        orientation='horizontal'
     >
         {items.map((item) => (
             <ParkSegmentGroup.Item key={item.id} value={item.id}>
                 <ParkSegmentGroup.ItemControl />
-                <ParkSegmentGroup.ItemText>{item.label}</ParkSegmentGroup.ItemText>
+                <ParkSegmentGroup.ItemText whiteSpace="nowrap">{item.label}</ParkSegmentGroup.ItemText>
                 <ParkSegmentGroup.ItemHiddenInput />
             </ParkSegmentGroup.Item>
         ))}

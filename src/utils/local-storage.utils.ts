@@ -31,18 +31,21 @@ export function deleteAccessToken(): void {
  * Sets the preferred theme.
  * @param theme
  */
-export function setPreferredTheme(theme: ETheme|null): void {
-    localStorage.setItem(THEME_STORAGE_KEY, theme ?? 'system');
+export function setPreferredTheme(theme: EThemeOption): void {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
 }
 
 /**
  * Gets the preferred theme.
  * @returns The preferred theme or null if the system default is used.
  */
-export function getPreferredTheme(): ETheme|null {
+export function getPreferredTheme(): EThemeOption {
     const theme = localStorage.getItem(THEME_STORAGE_KEY);
 
-    if (theme === 'system') return null;
+    if (!theme) return EThemeOption.System;
+
+    return theme as EThemeOption;
+}
 
 /**
  * Sets the preferred language.

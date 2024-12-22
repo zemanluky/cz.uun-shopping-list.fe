@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
                         </VStack>
                         <Menu
                             items={[
-                                { type: 'item', id: 'edit', text: 'Upravit profil', icon: <UserListIcon/>, onClick: () => console.log('edit') },
+                                { type: 'item', id: 'edit', text: 'Upravit profil', icon: <UserListIcon/>, link: '/profile/info' },
                                 { type: 'item', id: 'd', text: 'Odhlásit se', icon: <Door01Icon/>, onClick: () => logout() },
                             ]}
                             trigger={<IconButton size={'lg'} variant={'subtle'} borderRadius="50px">

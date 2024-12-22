@@ -7,37 +7,53 @@ export enum ETheme {
     Dark = 'dark'
 }
 
+export enum EThemeOption {
+    Light = 'light',
+    Dark = 'dark',
+    System = 'system'
+}
+
 interface IThemeContext {
-    /** The set theme. */
+    /** The set preference. */
+    themePreference: EThemeOption,
+
+    /** The actual theme. */
     theme: ETheme,
 
     /**
      * Method to set the theme preference.
-     * @param theme Provide the desired theme or null to use the system default.
+     * @param theme Provide the desired theme.
      */
-    setThemePreference: (theme: ETheme|null) => void
+    setThemePreference: (theme: EThemeOption) => void
 }
 
 const ThemeContext = createContext<IThemeContext|undefined>(undefined);
 
 export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-    const [theme, setTheme] = useState<ETheme|null>(null);
+    const [themePreference, setThemePreference] = useState<EThemeOption>(EThemeOption.System);
 
     // load the last setting from local storage, if exists
-    useEffect(() => setTheme(getPreferredTheme()), []);
+    useEffect(() => setThemePreference(getPreferredTheme()), []);
 
     // save the theme setting to local storage
-    useEffect(() => setPreferredTheme(theme), [theme]);
+    useEffect(() => setPreferredTheme(themePreference), [themePreference]);
 
     // The actual theme based on the system setting or the preference
     const currentTheme = useMemo<ETheme>(() => {
-        if (theme !== null) return theme;
+        switch (themePreference) {
+            case EThemeOption.Light:
+                return ETheme.Light;
 
-        return window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? ETheme.Dark
-            : ETheme.Light
-            ;
-    }, [theme]);
+            case EThemeOption.Dark:
+                return ETheme.Dark;
+
+            default:
+                return window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? ETheme.Dark
+                    : ETheme.Light
+                ;
+        }
+    }, [themePreference]);
 
     // update the theme when the preference changes
     useEffect(() => {
@@ -49,9 +65,9 @@ export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({ children 
 
         document.documentElement.classList.remove('light');
         document.documentElement.classList.add('dark');
-    }, [theme]);
+    }, [currentTheme]);
 
-    return <ThemeContext.Provider value={{ theme: currentTheme, setThemePreference: setTheme }}>
+    return <ThemeContext.Provider value={{ themePreference, theme: currentTheme, setThemePreference }}>
         {children}
     </ThemeContext.Provider>;
 };
