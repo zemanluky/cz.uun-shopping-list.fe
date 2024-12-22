@@ -1,12 +1,17 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {Grid, GridProps} from "../../../../styled-system/jsx";
+import {Grid, HStack, VStack, VstackProps} from "../../../../styled-system/jsx";
 import {Field, SingleDateInput} from "@Components/ui/Form";
 import {Input} from "@ParkComponents/ui/Input.tsx";
-import {Checkbox, Heading} from "@ParkComponents/ui";
+import {Button, Checkbox, Heading, Text} from "@ParkComponents/ui";
 import * as R from "remeda";
 import {parseDate} from "@ark-ui/react";
-import { useSearchParams } from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {formatISO, parseISO} from "date-fns";
+import {SegmentGroup} from "@Components/ui/SegmentGroup.tsx";
+import {EShoppingListView} from "../../../types/shopping-list.ts";
+import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
+import {FilterIcon} from "hugeicons-react";
+import {Dialog, DialogButtons, DialogContent, DialogHeading} from "@Components/ui/Dialog";
 
 export type TShoppingListFilters = {
     search: string|null;
@@ -15,11 +20,12 @@ export type TShoppingListFilters = {
     includeOnly: EShoppingListView;
 }
 
-interface IProps extends GridProps {
+interface IProps extends VstackProps {
     onFilterChange: (filters: TShoppingListFilters) => void;
 }
 
-export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridProps}) => {
+export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStackProps}) => {
+    const [isFilterDialogOpen, setFilterDialogOpen] = useState<boolean>(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const [filter, setFilter] = useState<TShoppingListFilters>({
         search: null,
@@ -53,7 +59,7 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
      * @param newFilter
      */
     const updateSearchParams = (newFilter: TShoppingListFilters) => {
-        const { search, completeBefore, showCompleted } = newFilter;
+        const { search, completeBefore, showCompleted, includeOnly } = newFilter;
 
         const newSearchParams: Record<string, string|Array<string>> = {};
 
@@ -78,25 +84,77 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...gridPr
         debounceFilterChange.call(updatedFilter);
     }
 
-    const { showCompleted, search, completeBefore } = filter;
+    const { includeOnly, search, completeBefore, showCompleted } = filter;
+    const minDate = useMemo(() => parseDate(new Date()), []);
 
-    return <Grid {...gridProps} gridTemplateColumns={'3fr 3fr 2fr'} alignItems="center" columnGap='4' rowGap='2'>
-        <Heading as={'h4'} gridColumn="1/4" fontSize="xl">Filtry</Heading>
-        <Field label="Vyhledat">
-            <Input value={search || ''}
-                   placeholder="Víkendový feast..."
-                   onChange={(e) => changeFilter('search', e.target.value.length ? e.target.value : null)}/>
-        </Field>
-        <Field label="Dokončit před">
-            <SingleDateInput value={completeBefore}
-                             onChange={(newDate) => changeFilter('completeBefore', newDate)}
-                             min={parseDate(new Date())}
-            />
-        </Field>
-        <Field type="any">
-            <Checkbox checked={showCompleted} onCheckedChange={() => changeFilter('showCompleted', !showCompleted)}>
-                Zobrazit hotové
-            </Checkbox>
-        </Field>
-    </Grid>
+    /**
+     * Renders the filter fields.
+     * @param renderForModal
+     */
+    const renderFilters = (renderForModal: boolean = false): React.ReactNode => {
+        return <>
+            <Field label="Vyhledat" w="100%">
+                <Input
+                    value={search || ''}
+                    placeholder="Víkendový feast..."
+                    onChange={(e) => changeFilter('search', e.target.value.length ? e.target.value : null)}/>
+            </Field>
+            <Field label="Dokončit před" w="100%">
+                <SingleDateInput
+                    value={completeBefore}
+                    onChange={(newDate) => changeFilter('completeBefore', newDate)}
+                    min={minDate}
+                />
+            </Field>
+            <Field type="any" w="100%" label={renderForModal ? null : ''}>
+                <Checkbox
+                    checked={showCompleted}
+                    onCheckedChange={() => changeFilter('showCompleted', !showCompleted)}
+                >
+                    Zobrazit hotové
+                </Checkbox>
+            </Field>
+        </>
+    }
+
+    return <VStack {...vStackProps} alignItems="flex-start" w="100%" gap="4">
+        <HStack justifyContent="space-between" w="100%">
+            <Heading as={'h4'} gridColumn="1/4" fontSize="xl">Filtry</Heading>
+            <Button variant="outline" display={{ base: 'flex', md: 'none' }} onClick={() => setFilterDialogOpen(true)}>
+                <HugeIcon icon={<FilterIcon/>}/>
+                Upravit filtraci
+            </Button>
+        </HStack>
+        <Grid
+            display={{ base: 'none', md: 'grid' }}
+            gridTemplateColumns='3fr 3fr 2fr'
+            gridTemplateRows="auto"
+            alignItems="center"
+            columnGap='4'
+            rowGap='2'
+            w="100%"
+        >
+            {renderFilters()}
+        </Grid>
+        <SegmentGroup
+            items={[
+                { id: EShoppingListView.all, label: 'Všechny seznamy' },
+                { id: EShoppingListView.own, label: 'Moje seznamy' },
+                { id: EShoppingListView.shared, label: 'Seznamy kamarádů' },
+            ]}
+            activeItem={includeOnly}
+            onItemChange={(item) => changeFilter('includeOnly', item as EShoppingListView)}
+            mt={2}
+        />
+        <Dialog isOpen={isFilterDialogOpen}>
+            <DialogHeading heading="Filtry" onCancel={() => setFilterDialogOpen(false)}/>
+            <DialogContent>
+                <VStack alignItems="flex-start" w="100%" gap={4}>
+                    <Text>Filtry, které zde nastavíte, jsou ihned aplikovány.</Text>
+                    {renderFilters(true)}
+                </VStack>
+            </DialogContent>
+            <DialogButtons buttons={[ <Button onClick={() => setFilterDialogOpen(false)}>Zavřít</Button> ]}/>
+        </Dialog>
+    </VStack>
 }

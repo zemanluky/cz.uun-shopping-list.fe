@@ -18,13 +18,13 @@ import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 import useSWR from "swr";
 import {apiRoutes} from "../../config/api/routes.ts";
 import {TShoppingListDetail} from "../../types/shopping-list.ts";
-import {Spinner} from "@ParkComponents/ui";
 import {fullName} from "@Utils/user.helper.ts";
 import {IShoppingListActionModalsRef, ShoppingListActionModals} from "@Components/features/ShoppingList/ShoppingListActionModals.tsx";
 import {toaster} from "@Components/layout/Toaster.tsx";
 import {ShoppingListItemList} from "@Components/features/ShoppingListItem/ShoppingListItemList.tsx";
 import {MemberListDrawer, IMemberListRef} from "@Components/features/ShoppingListMember/MemberListDrawer.tsx";
 import {AuthenticatedRoute} from "@Components/guard";
+import {Spinner} from "@ParkComponents/ui";
 
 export const Detail: React.FC = () => {
     const shoppingListActionsRef = useRef<IShoppingListActionModalsRef>(null);
@@ -55,7 +55,9 @@ export const Detail: React.FC = () => {
 
         if (shoppingList.author._id === user._id)
             return <>
-                <Button size='xl' onClick={() => shoppingListActionsRef.current?.openCloseListConfirmModal(shoppingList)}>
+                <Button size='xl' onClick={() => shoppingListActionsRef.current?.openCloseListConfirmModal(shoppingList)}
+                        className={css({flexGrow: 1})}
+                >
                     <CheckmarkCircle02Icon size={24} strokeWidth={2}/>
                     Dokončit
                 </Button>
@@ -84,7 +86,9 @@ export const Detail: React.FC = () => {
                 />
             </>
 
-        return <Button size='xl' onClick={() => shoppingListActionsRef.current?.openLeaveListConfirmModal(shoppingList, leaveList)} variant="subtle">
+        return <Button size='xl' onClick={() => shoppingListActionsRef.current?.openLeaveListConfirmModal(shoppingList, leaveList)}
+                       variant="subtle" className={css({flexGrow: 1})}
+        >
             <HugeIcon icon={<Door01Icon/>}/>
             Opustit seznam
         </Button>
@@ -99,11 +103,11 @@ export const Detail: React.FC = () => {
         />
         {!isLoading && shoppingList
             ? <Container maxW='6xl' mt='8'>
-                <Grid columns={2} columnGap='8' minH={200}>
-                    <Box className={css(center.raw(), {bg: 'bg.muted', borderRadius: '2xl'})}>
+                <Grid columns={{ base: 1, md: 2 }} gap='8' minH={200}>
+                    <Box className={css(center.raw(), {bg: 'bg.muted', borderRadius: '2xl', minH: 200})}>
                         <Album02Icon size={32} strokeWidth={3}/>
                     </Box>
-                    <VStack gap='4' alignItems={'flex-start'} py={4}>
+                    <VStack gap='4' alignItems={'flex-start'} py={{ base: 0, md: 4 }} px={{ base: 4, md: 0 }}>
                         <InformationRow
                             title='Vytvořeno uživatelem' data={fullName(shoppingList.author)}
                             icon={<UserEdit01Icon size={28} strokeWidth={2}/>}

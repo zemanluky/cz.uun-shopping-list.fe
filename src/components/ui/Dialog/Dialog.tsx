@@ -8,8 +8,8 @@ interface DialogProps extends ParkDialog.RootProps {
 }
 
 const dialogStyles = css({
-    px: 8, py: 6, minW: 'auto', mx: '4',
-    md: { minW: '500px', maxW: '4xl' }
+    p: 6, minW: 'auto', mx: '4', w: "100%",
+    md: { minW: '500px', maxW: '3xl', p: 8 }
 })
 
 export const Dialog: React.FC<DialogProps> = ({isOpen, children, ...dialogProps}) => {

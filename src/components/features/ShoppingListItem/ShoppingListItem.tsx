@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {HStack, HstackProps} from "../../../../styled-system/jsx";
+import {HStack, Stack, StackProps} from "../../../../styled-system/jsx";
 import {Text, Code, Checkbox, Button} from "@ParkComponents/ui";
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {Delete02Icon, PencilEdit01Icon, Tick02Icon} from "hugeicons-react";
@@ -17,13 +17,13 @@ import {TFetcherKey} from "@Utils/axios.config.ts";
 import {toaster} from "@Components/layout/Toaster.tsx";
 import {fullName} from "@Utils/user.helper.ts";
 
-interface ShoppingListItemProps extends HstackProps {
+interface ShoppingListItemProps extends StackProps {
     shoppingListId: string;
     item?: TShoppingListItem;
     readOnly?: boolean;
 }
 
-export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListId, item, readOnly, ...hstackProps}) => {
+export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListId, item, readOnly, ...stackProps}) => {
     const [isEditMode, setEditMode] = useState<boolean>(false);
     const [completed, setCompleted] = useState<ArkCheckbox.CheckedState>(false);
     const [form, setForm] = useState<{amount: string, name: string}>({amount: '', name: ''});
@@ -126,30 +126,30 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
 
     // Render the item's form when in edit mode or no item is set
     if (!item || isEditMode)
-        return <HStack {...hstackProps} p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'} gap={8}>
-            <HStack gap={2} w="100%">
+        return <Stack {...stackProps} flexDir="row" alignItems="center" p={4} bg={"bg.subtle"} shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'} gap={8}>
+            <Stack gap={2} w="100%" flexDir={{ base: 'column', md: 'row' }}>
                 {/* For some obscure reason when this checkbox is present at least once,
                 the other one becomes disabled as well and its state cannot be changed. */}
                 {/* <Checkbox value={} readOnly name={'create_item_completed'}/> */}
                 <Input id={'create_item_amount'} placeholder={'Množství'} size={'sm'} value={form.amount}
                        onChange={(e) => updateFormField('amount', e.target.value)}
                        onKeyDown={handleKeySave} disabled={readOnly} ref={amountInputRef}
-                       className={css({minW: "50px", maxW: "200px", w: "auto", flexShrink: 0})}
+                       className={css({minW: "50px", w: "auto", flexShrink: 0, flexGrow: 1})}
                 />
                 <Input id={'create_item_name'} placeholder={'Název'} size={'sm'} value={form.name}
                        onChange={(e) => updateFormField('name', e.target.value)}
                        onKeyDown={handleKeySave} disabled={readOnly} className={css({w: "100%"})}
                 />
-            </HStack>
+            </Stack>
             <Button p={0} onClick={() => save()} disabled={form.name.length === 0 || form.amount.length === 0}>
                 <Tick02Icon strokeWidth={2} />
             </Button>
-        </HStack>;
+        </Stack>;
 
     // Render the item detail
-    return <HStack {...hstackProps} p={4} bg={item.completed !== null ? "bg.emphasized" : "bg.subtle"}
+    return <Stack {...stackProps} p={4} bg={item.completed !== null ? "bg.emphasized" : "bg.subtle"}
                    shadow={"md"} borderRadius={'2xl'} w={'100%'} justifyContent={'space-between'}
-                   minH="72px"
+                   minH="72px" flexDir={{ base: 'column', sm: 'row' }} align={{ base: 'flex-start', sm: 'center' }}
     >
         <HStack gap={4}>
             {!readOnly
@@ -162,9 +162,9 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
             </Text>
         </HStack>
         {!readOnly
-            ? <HStack gap={2}>
+            ? <HStack gap={2} alignSelf={{ base: 'flex-end', sm: 'unset' }}>
                 {completedByUser !== undefined
-                    ? <Text>Dokončil: {fullName(completedByUser)}</Text>
+                    ? <Text color="fg.subtle">Dokončil: {fullName(completedByUser)}</Text>
                     : <>
                         <Button p={0} variant={'subtle'} onClick={() => setEditMode(true)}>
                             <PencilEdit01Icon strokeWidth={2} />
@@ -177,5 +177,5 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
             </HStack>
             : null
         }
-    </HStack>
+    </Stack>
 }

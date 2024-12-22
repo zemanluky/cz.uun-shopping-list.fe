@@ -120,7 +120,7 @@ export const ShoppingListGrid: React.FC<IProps> = ({filter, onViewValidation, ..
 
     return <>
         {!isLoading && !isValidating && mergedItems.length === 0 && <h1>Nebyly nalezeny žádné seznamy, zkuste změnit filtr</h1>}
-        <Grid {...gridProps} columns={2} gap='4'>
+        <Grid {...gridProps} columns={{ base: 1, lg: 2 }} gap='4'>
             {mergedItems.map((list: TShoppingListOverview, index: number) => <ShoppingListCard
                 key={list._id}
                 shoppingList={list}

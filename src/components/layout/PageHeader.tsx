@@ -1,12 +1,11 @@
 import * as React from "react";
-import {Box, Container, HStack} from "../../../styled-system/jsx";
+import {Box, Container, Flex, HStack} from "../../../styled-system/jsx";
 import {Heading} from "@ParkComponents/ui/Heading.tsx";
-import {Button} from "@ParkComponents/ui/Button.tsx";
 import {Link} from "react-router-dom";
 import {ArrowLeft02Icon} from "hugeicons-react";
 import {css} from "../../../styled-system/css";
 import {Skeleton} from "@ParkComponents/ui/skeleton.tsx";
-import {Spinner} from "@ParkComponents/ui";
+import {IconButton} from "@ParkComponents/ui/icon-button.tsx";
 
 type PageHeaderProps = {
     title: string;
@@ -16,22 +15,23 @@ type PageHeaderProps = {
     validating?: boolean;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, actions, loading, validating}) => {
-    return <Box py='16' bg='accent.3'>
-        <Container display='flex' justifyContent='space-between' alignItems='center' maxW='6xl'>
-            <HStack alignItems='center' gap='4'>
+export const PageHeader: React.FC<PageHeaderProps> = ({title, previousLink, actions, loading}) => {
+    return <Box py={{base: '12', md: '16'}} bg='accent.3'>
+        <Container display='flex' justifyContent='space-between' gap={6} alignItems={{ md: 'center' }}
+                   flexDir={{base: 'column', md: 'row'}} maxW='6xl'
+        >
+            <Flex alignItems='center' gap='4' flexDir='row'>
                 {(previousLink === true || typeof previousLink === "string")
-                    && <Button variant='subtle' size='xl' css={{ aspectRatio: '1/1', borderRadius: '[50%]', p: 0 }} asChild>
+                    && <IconButton variant='subtle' size='xl' borderRadius="50%" display={{ base: 'none', md: 'flex' }} asChild>
                         <Link to={typeof previousLink === "string" ? previousLink : -1 as any}>
                             <ArrowLeft02Icon size={24} strokeWidth={3} className={css({ color: 'accent.12' })}/>
                         </Link>
-                    </Button>
+                    </IconButton>
                 }
                 <Skeleton isLoaded={!loading} minW="200px">
-                    <Heading as='h1' size='5xl' fontWeight='extrabold' lineHeight={1} color='accent.12'>{title}</Heading>
+                    <Heading as='h1' size='5xl' fontWeight='extrabold' lineHeight={1.1} color='accent.12'>{title}</Heading>
                 </Skeleton>
-                {validating && <Spinner size="lg" borderWidth="3px"/>}
-            </HStack>
+            </Flex>
             <HStack alignItems='center' gap='2'>
                 {actions || <></>}
             </HStack>

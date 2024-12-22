@@ -86,6 +86,9 @@ export const MemberListDrawer = forwardRef<IMemberListRef,IMemberListProps>(
                     }
                 </DrawerContent>
                 {canEdit && <DrawerButtons buttons={[
+                    <Button onClick={() => setIsOpen(false)} variant="subtle">
+                        Zpět
+                    </Button>,
                     <Button onClick={() => openMemberModal()}>
                         <HugeIcon icon={<UserAdd01Icon/>} />
                         Přidat člena

@@ -34,6 +34,13 @@ export default defineConfig({
   // this is needed for creating components with panda styles
   jsxFramework: "react",
   theme: {
+    containerNames: ['shoppingListCard'],
+    containerSizes: {
+      xs: '320px',
+      sm: '480px',
+      md: '640px',
+      lg: '800px'
+    },
     extend: {
       slotRecipes: {
         informationRow: informationRowRecipe

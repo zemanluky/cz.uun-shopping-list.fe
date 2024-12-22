@@ -12,10 +12,15 @@ import {Text} from "@ParkComponents/ui";
 
 const navbarStyles = css({
     py: '4',
-    shadow: 'xl',
+    shadow: {
+        _light: 'xl',
+        _dark: 'none'
+    },
+    backdropBlur: '5px',
     position: "sticky",
+    backdropFilter: 'auto',
     top: '[0px]',
-    bg: 'bg.subtle',
+    bg: 'bg.subtle/50',
     zIndex: 100
 });
 

@@ -3,14 +3,14 @@ import { Field as ParkField } from "@ParkComponents/ui/field";
 
 type TRenderType = 'input'|'textarea'|'select'|'any';
 
-interface IProps {
+interface IProps extends ParkField.RootProps{
     label?: string|null,
     children: ReactElement,
     type?: TRenderType
     errors?: Array<string>
 }
 
-export const Field: React.FC<IProps> = ({label, errors, children, type}) => {
+export const Field: React.FC<IProps> = ({label, errors, children, type, ...fieldProps}) => {
     const hasError = useMemo<boolean>(() => !!errors && errors.length > 0, [errors]);
     const errorsComponent = useMemo<ReactNode|null>(() => {
         if (!hasError) return null;
@@ -46,7 +46,7 @@ export const Field: React.FC<IProps> = ({label, errors, children, type}) => {
         }
     }
 
-    return <ParkField.Root invalid={hasError}>
+    return <ParkField.Root {...fieldProps} invalid={hasError}>
         {label !== null ? <ParkField.Label>
             {label && label.length
                 ? label

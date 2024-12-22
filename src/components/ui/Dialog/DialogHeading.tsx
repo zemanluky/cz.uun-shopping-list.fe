@@ -12,7 +12,7 @@ interface IProps {
 /** Heading to use in dialog component. Renders the title and close button. */
 export const DialogHeading: React.FC<IProps> = ({heading, onCancel, processing}) => {
     return <HStack justifyContent='space-between' w='100%'>
-        <Heading as='h3' fontSize='2xl'>{heading}</Heading>
+        <Heading as='h3' fontSize='2xl' lineHeight={1.1}>{heading}</Heading>
         <Button variant='ghost' onClick={() => onCancel()} css={{p: 2, position: 'relative', right: -2}} disabled={processing}>
             <Cancel01Icon size={32}/>
         </Button>

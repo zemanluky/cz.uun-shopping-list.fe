@@ -125,7 +125,7 @@ export const ShoppingListModal = forwardRef<IShoppingListModalRef>(
             <Form<IFormType> onSubmit={(values) => save(values)} ref={formRef}>
                 {({submit, isValid}) => (
                     <>
-                        <DialogHeading heading={!shoppingList ? 'Vytvořit nový seznam' : 'Upravit seznam'} onCancel={cancel}/>
+                        <DialogHeading heading={!shoppingList ? 'Nový seznam' : 'Upravit seznam'} onCancel={cancel}/>
                         <DialogContent>
                             <form className={css({width: '100%'})}
                                 onSubmit={(e) => {
