@@ -1,7 +1,9 @@
-import {ETheme} from "../contexts/ThemeContext.tsx";
+import {EThemeOption} from "../contexts/ThemeContext.tsx";
+import {ELanguage} from "../contexts/LanguageContext.tsx";
 
 export const ACCESS_TOKEN_STORAGE_KEY: string = "auth_token";
 export const THEME_STORAGE_KEY: string = "preferred_theme";
+export const LANGUAGE_STORAGE_KEY: string = "app_lang";
 
 /**
  * Saves new access token to local storage.
@@ -42,5 +44,19 @@ export function getPreferredTheme(): ETheme|null {
 
     if (theme === 'system') return null;
 
-    return theme as ETheme;
+/**
+ * Sets the preferred language.
+ * @param lang
+ */
+export function setPreferredLanguage(lang: ELanguage): void {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+}
+
+/**
+ * Gets the preferred language.
+ * @returns The preferred language or null when not yet set.
+ */
+export function getPreferredLanguage(): ELanguage|null {
+    const lang = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return lang as ELanguage|null;
 }
