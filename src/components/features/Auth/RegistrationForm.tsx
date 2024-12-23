@@ -125,7 +125,7 @@ export const RegistrationForm: React.FC = () => {
                             <HugeIcon icon={<UserAdd01Icon/>}/>
                             Registrovat se
                         </Button>
-                        <Link to={!isMutating ? "/auth" : "#"} className={cx(button({variant: "ghost"}), css({ w: "100%" }))}>
+                        <Link to={!isMutating ? "/auth" : "#"} className={cx(button({variant: "ghost"}), css({ w: "100%" }))} replace>
                             Už mám účet
                         </Link>
                     </VStack>

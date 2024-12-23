@@ -80,7 +80,7 @@ export const LoginForm: React.FC = () => {
                         Přihlásit se
                         <HugeIcon icon={<ArrowRight02Icon/>}/>
                     </Button>
-                    <Link to="/auth/register" className={cx(button({variant: "ghost"}), css({ w: "100%" }))}>Ještě nemám účet</Link>
+                    <Link to="/auth/register" className={cx(button({variant: "ghost"}), css({ w: "100%" }))} replace>Ještě nemám účet</Link>
                 </VStack>
             </form>
         </>
