@@ -1,0 +1,10 @@
+name: shoppylist-fe
+static_sites:
+  - name: shoppylist-fe
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: zemanluky/cz.uun-shopping-list.fe
+    dockerfile_path: Dockerfile
+    output_dir: /app
+    catchall_document: index.html

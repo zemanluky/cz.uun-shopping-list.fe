@@ -2,23 +2,17 @@ FROM oven/bun AS build
 
 WORKDIR /app
 
-COPY bun.lockb .
-COPY package.json .
-COPY panda.config.ts .
+COPY . .
 
+# Install dependencies
 RUN bun install --frozen-lockfile
 
-COPY src ./src
-
-# compile everything to a binary called cli which includes the bun runtime
-RUN bun build ./src/index.ts --compile --outfile cli
+# Run the vite build command from package json
+RUN bun run build
 
 FROM ubuntu:22.04
 
 WORKDIR /app
 
-# copy the compiled binary from the build image
-COPY --from=build /app/cli /app/cli
-
-# execute the binary!
-CMD ["/app/cli"]
+# copy the compiled files from the build image
+COPY --from=build /app/dist /app
