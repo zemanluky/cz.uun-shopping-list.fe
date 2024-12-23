@@ -8,7 +8,7 @@ COPY . .
 RUN bun install --frozen-lockfile
 
 # Run the vite build command from package json
-RUN NODE_ENV=prod bun run build
+RUN NODE_ENV=production bun run build
 
 FROM ubuntu:22.04
 
