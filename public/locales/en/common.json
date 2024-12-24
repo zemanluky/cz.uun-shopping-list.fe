@@ -1,0 +1,35 @@
+{
+  "back": "Back",
+  "cancel": "Cancel",
+  "close": "Close",
+  "save": "Save changes",
+  "inputs": {
+    "autocompleteInputPlaceholder": "Select an option or start writing to search",
+    "singleDateInputPlaceholder": "Select a date"
+  },
+  "actions": {
+    "logout": "Logout",
+    "modifyProfile": "Update profile"
+  },
+  "settings": {
+    "pageTitle": "Settings and your profile",
+    "app": {
+      "title": "Application settings",
+      "themeSetting": {
+        "label": "App theme",
+        "options": {
+          "system": "Follow system settings",
+          "light": "Light",
+          "dark": "Dark"
+        }
+      },
+      "languageSetting": {
+        "label": "App language",
+        "options": {
+          "cs": "Čeština",
+          "en": "English"
+        }
+      }
+    }
+  }
+}

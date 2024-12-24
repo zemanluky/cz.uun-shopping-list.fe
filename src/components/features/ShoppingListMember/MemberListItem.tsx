@@ -5,6 +5,7 @@ import {TShoppingListMember} from "../../../types/shopping-list-member.ts";
 import {fullName as getFullName, getInitials} from "@Utils/user.helper.ts";
 import {Delete02Icon, PencilEdit01Icon} from "hugeicons-react";
 import {IconButton} from "@ParkComponents/ui/icon-button.tsx";
+import {useTranslation} from "react-i18next";
 
 interface MemberListItemProps extends HstackProps {
     member: TShoppingListMember,
@@ -14,6 +15,8 @@ interface MemberListItemProps extends HstackProps {
 }
 
 export const MemberListItem: React.FC<MemberListItemProps> = ({member, readOnly, onEdit, onDelete, ...hStackProps}) => {
+    const {t} = useTranslation('shopping-list');
+
     const initials = useMemo<string>(() => getInitials(member.user), [member]);
     const fullName = useMemo<string>(() => getFullName(member.user), [member]);
 
@@ -30,7 +33,9 @@ export const MemberListItem: React.FC<MemberListItemProps> = ({member, readOnly,
             </Circle>
             <Box>
                 <Text fontWeight='semibold' lineHeight={1.1}>{fullName}</Text>
-                <Text size='sm' color='fg.subtle' lineHeight={1.1}>{member.permission}</Text>
+                <Text size='sm' color='fg.subtle' lineHeight={1.1}>
+                    {t(`detail.members.permission.${member.permission!}`)}
+                </Text>
             </Box>
         </HStack>
         {!readOnly

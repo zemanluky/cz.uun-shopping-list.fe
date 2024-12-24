@@ -8,6 +8,8 @@ import { Button } from "@ParkComponents/ui";
 import {format, parseISO} from "date-fns";
 import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 import {css} from "../../../../styled-system/css";
+import {useLanguage} from "../../../contexts";
+import {useTranslation} from "react-i18next";
 
 interface IProps extends Omit<DatePicker.RootProps, 'value'|'onValueChange'|'onChange'|'selectionMode'|'positioning'> {
     value: Date|undefined|null;
@@ -15,6 +17,9 @@ interface IProps extends Omit<DatePicker.RootProps, 'value'|'onValueChange'|'onC
 }
 
 export const SingleDateInput: React.FC<IProps> = ({value, onChange, ...datePickerProps}) => {
+    const { language } = useLanguage();
+    const { t } = useTranslation();
+
     /**
      * Changes the value of the input.
      * @param dateValues
@@ -33,7 +38,7 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange, ...datePicke
         positioning: { sameWidth: true },
         onValueChange: (change) => changeValue(change.valueAsString),
         value: value ? [parseDate(value)] : [],
-        locale: 'cs-CZ',
+        locale: language,
     });
 
     return <DatePicker.RootProvider value={datePicker}>
@@ -47,7 +52,9 @@ export const SingleDateInput: React.FC<IProps> = ({value, onChange, ...datePicke
                 >
                     {datePicker.valueAsDate[0]
                         ? <Text fontSize="md">{format(datePicker.valueAsDate[0], 'd. L. y')}</Text>
-                        : <Text color={{base: 'fg.subtle', _invalid: 'fg.error'}} fontSize="md">Vyberte datum</Text>
+                        : <Text color={{base: 'fg.subtle', _invalid: 'fg.error'}} fontSize="md">
+                            {t('inputs.singleDateInputPlaceholder')}
+                        </Text>
                     }
                     <HugeIcon icon={<Calendar03Icon/>} className={css({pos: 'absolute', right: '3'})}/>
                 </Button>

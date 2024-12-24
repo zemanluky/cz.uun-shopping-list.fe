@@ -16,6 +16,7 @@ import {
 import {TFetcherKey} from "@Utils/axios.config.ts";
 import {toaster} from "@Components/layout/Toaster.tsx";
 import {fullName} from "@Utils/user.helper.ts";
+import {useTranslation} from "react-i18next";
 
 interface ShoppingListItemProps extends StackProps {
     shoppingListId: string;
@@ -27,6 +28,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
     const [isEditMode, setEditMode] = useState<boolean>(false);
     const [completed, setCompleted] = useState<ArkCheckbox.CheckedState>(false);
     const [form, setForm] = useState<{amount: string, name: string}>({amount: '', name: ''});
+    const { t } = useTranslation('shopping-list');
 
     const amountInputRef = useRef<HTMLInputElement>(null);
     const mutationKey: TFetcherKey = useMemo(() => ([apiRoutes.shoppingList.shoppingListDetail[1], { id: shoppingListId }]), [shoppingListId]);
@@ -131,12 +133,14 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
                 {/* For some obscure reason when this checkbox is present at least once,
                 the other one becomes disabled as well and its state cannot be changed. */}
                 {/* <Checkbox value={} readOnly name={'create_item_completed'}/> */}
-                <Input id={'create_item_amount'} placeholder={'Množství'} size={'sm'} value={form.amount}
+                <Input id={'create_item_amount'} placeholder={t('detail.items.amountPlaceholder')}
+                       size={'sm'} value={form.amount}
                        onChange={(e) => updateFormField('amount', e.target.value)}
                        onKeyDown={handleKeySave} disabled={readOnly} ref={amountInputRef}
                        className={css({minW: "50px", w: "auto", flexShrink: 0, flexGrow: 1})}
                 />
-                <Input id={'create_item_name'} placeholder={'Název'} size={'sm'} value={form.name}
+                <Input id={'create_item_name'} placeholder={t('detail.items.namePlaceholder')}
+                       size={'sm'} value={form.name}
                        onChange={(e) => updateFormField('name', e.target.value)}
                        onKeyDown={handleKeySave} disabled={readOnly} className={css({w: "100%"})}
                 />
@@ -164,7 +168,7 @@ export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({shoppingListI
         {!readOnly
             ? <HStack gap={2} alignSelf={{ base: 'flex-end', sm: 'unset' }}>
                 {completedByUser !== undefined
-                    ? <Text color="fg.subtle">Dokončil: {fullName(completedByUser)}</Text>
+                    ? <Text color="fg.subtle">{t('detail.items.completedBy', { user: fullName(completedByUser) })}</Text>
                     : <>
                         <Button p={0} variant={'subtle'} onClick={() => setEditMode(true)}>
                             <PencilEdit01Icon strokeWidth={2} />

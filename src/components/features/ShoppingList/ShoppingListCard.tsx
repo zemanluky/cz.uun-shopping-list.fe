@@ -16,6 +16,7 @@ import {useAuth} from "../../../contexts";
 import {InformationRow} from "@Components/ui/InformationRow.tsx";
 import {format, isBefore} from "date-fns";
 import {fullName} from "@Utils/user.helper.ts";
+import {useTranslation} from "react-i18next";
 
 interface IProps {
     shoppingList: TShoppingListOverview;
@@ -28,6 +29,7 @@ interface IProps {
 /** An overview card for a given shopping list. */
 export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDelete, onLeaveList, onCloseList}) => {
     const navigate = useNavigate();
+    const { t } = useTranslation('shopping-list');
     const {user} = useAuth();
 
     const menuItems = useMemo<Array<TMenuItem>>((): Array<TMenuItem> => {
@@ -38,18 +40,18 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDe
 
             if (onCloseList)
                 items.push(
-                    {type: 'item', id: 'close', text: 'Uzavřít seznam', icon: <TickDouble02Icon/>, onClick: () => onCloseList()},
+                    {type: 'item', id: 'close', text: t('actions.closeList'), icon: <TickDouble02Icon/>, onClick: () => onCloseList()},
                     {type: 'separator', id: 'sep-1'}
                 );
 
             if (onUpdate)
                 items.push({
-                    type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>, onClick: () => onUpdate()
+                    type: 'item', id: 'edit', text: t('actions.editList'), icon: <PencilEdit01Icon/>, onClick: () => onUpdate()
                 });
 
             if (onDelete)
                 items.push({
-                    type: 'item', id: 'delete', text: 'Odstranit', icon: <Delete02Icon/>, onClick: () => onDelete()
+                    type: 'item', id: 'delete', text: t('actions.deleteList'), icon: <Delete02Icon/>, onClick: () => onDelete()
                 });
 
             return items;
@@ -57,7 +59,7 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDe
         else if (user) {
             return onLeaveList ? [
                 {
-                    type: 'item', id: 'leave-list', text: 'Opustit seznam', icon: <Door01Icon/>,
+                    type: 'item', id: 'leave-list', text: t('actions.leaveList'), icon: <Door01Icon/>,
                     onClick: () => onLeaveList()
                 }
             ] : [];
@@ -81,7 +83,7 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDe
             >
                 <Box>
                     <HStack justifyContent='space-between' alignContent={'flex-start'} w={'100%'}>
-                        <Heading as='h3' fontSize='2xl' lineHeight='tight' pr={{ base: 0, '@shoppingListCard/sm': '54px' }}>
+                        <Heading as='h3' fontSize='2xl' lineHeight='tight' aria-label={t('common.nameHint')} pr={{ base: 0, '@shoppingListCard/sm': '54px' }}>
                             {shoppingList.name}
                         </Heading>
                         {menuItems.length
@@ -103,31 +105,48 @@ export const ShoppingListCard: React.FC<IProps> = ({shoppingList, onUpdate, onDe
                         }
                     </HStack>
                     <Box className={css(wrap.raw({ columnGap: '4', rowGap: '2' }), { mt: '2' })}>
-                        <InformationRow title='Počet položek' data={`${shoppingList.stats.total_items} položek`}
-                                        icon={<Menu01Icon/>} size='xs'/>
+                        <InformationRow
+                            title='Počet položek'
+                            data={t('common.itemCount', { count: shoppingList.stats.total_items })}
+                            icon={<Menu01Icon/>}
+                            size='xs'
+                        />
+
                         {shoppingList.closed_at !== null
                             ? <>
-                                <InformationRow title='Dokončeno' icon={<CalendarCheckOut01Icon/>} size='xs'
-                                                data={`Dokončeno ${format(shoppingList.closed_at, 'd. L. y')}`}/>
+                                <InformationRow
+                                    data={t('card.completedAt', { date: format(shoppingList.closed_at, 'd. L. y') })}
+                                    icon={<CalendarCheckOut01Icon/>}
+                                    size='xs'
+                                />
                             </>
                             : <>
-                                <InformationRow title='Z toho dokončených položek' data={`${shoppingList.stats.completed_items} hotových`}
-                                                icon={<CheckListIcon/>} size='xs'/>
-                                <InformationRow title='Dokončit před' icon={<CalendarCheckOut01Icon/>} size='xs'
-                                                data={`Dokončit před ${format(shoppingList.complete_by, 'd. L. y')}`}
-                                                state={isBefore(shoppingList.complete_by, new Date()) ? 'error' : 'default'}/>
+                                <InformationRow
+                                    data={t('card.itemCountCompleted', { count: shoppingList.stats.completed_items })}
+                                    icon={<CheckListIcon/>}
+                                    size='xs'
+                                />
+                                <InformationRow
+                                    icon={<CalendarCheckOut01Icon/>}
+                                    data={t('card.completeBy', { date: format(shoppingList.complete_by, 'd. L. y') })}
+                                    state={isBefore(shoppingList.complete_by, new Date()) ? 'error' : 'default'}
+                                    size='xs'
+                                />
                             </>
                         }
                     </Box>
                 </Box>
                 <HStack justifyContent="space-between" w="100%">
-                    <InformationRow title='Vytvořil' data={fullName(shoppingList.author)} icon={<UserEdit01Icon/>} size='sm'/>
+                    <InformationRow title={t('card.createdBy')} data={fullName(shoppingList.author)} icon={<UserEdit01Icon/>} size='sm'/>
                     <IconButton
-                        onClick={navigateToDetail} size={'lg'}
+                        aria-label={t('card.showDetail')}
+                        title={t('card.showDetail')}
+                        onClick={navigateToDetail}
                         className={css({
                             pos: {base: 'static', '@shoppingListCard/sm': 'absolute'},
                             right: '4', bottom: '4', borderRadius: 'xl'})
                         }
+                        size='lg'
                     >
                         <HugeIcon icon={<ArrowRight01Icon/>}/>
                     </IconButton>

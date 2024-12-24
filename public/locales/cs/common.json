@@ -1,0 +1,35 @@
+{
+  "back": "Zpět",
+  "cancel": "Zrušit",
+  "close": "Zavřít",
+  "save": "Uložit změny",
+  "inputs": {
+    "autocompleteInputPlaceholder": "Vyberte možnost nebo začněte psát pro vyhledávání...",
+    "singleDateInputPlaceholder": "Vyberte datum kliknutím"
+  },
+  "actions": {
+    "logout": "Odhlásit se",
+    "modifyProfile": "Upravit profil"
+  },
+  "settings": {
+    "pageTitle": "Nastavení a tvůj profil",
+    "app": {
+      "title": "Nastavení aplikace",
+      "themeSetting": {
+        "label": "Motiv aplikace",
+        "options": {
+          "system": "Podle systému",
+          "light": "Světlý",
+          "dark": "Tmavý"
+        }
+      },
+      "languageSetting": {
+        "label": "Jazyk aplikace",
+        "options": {
+          "cs": "Čeština",
+          "en": "English"
+        }
+      }
+    }
+  }
+}

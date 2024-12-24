@@ -4,7 +4,7 @@ import {Router} from "./Router.tsx";
 import {css} from "../../styled-system/css";
 import {SWRConfig} from "swr";
 import {authenticatedFetcher} from "@Utils/axios.config.ts";
-import {Toaster} from "@Components/layout/Toaster.tsx";
+import {toaster, Toaster} from "@Components/layout/Toaster.tsx";
 
 const appStyles = css({
     minHeight: "100vh",
@@ -16,7 +16,14 @@ const appStyles = css({
 export const App: React.FC = () => {
   return (
       <Providers>
-          <SWRConfig value={{fetcher: authenticatedFetcher, revalidateOnFocus: false}}>
+          <SWRConfig value={{
+              fetcher: authenticatedFetcher,
+              revalidateOnFocus: false,
+              onError: (err) => {
+                  console.error(err);
+                  toaster.error({title: "Nastala chyba při komunikaci se serverem."});
+              }
+          }}>
               <div className={appStyles}>
                   <Router/>
                   <Toaster/>

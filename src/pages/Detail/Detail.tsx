@@ -25,11 +25,13 @@ import {ShoppingListItemList} from "@Components/features/ShoppingListItem/Shoppi
 import {MemberListDrawer, IMemberListRef} from "@Components/features/ShoppingListMember/MemberListDrawer.tsx";
 import {AuthenticatedRoute} from "@Components/guard";
 import {Spinner} from "@ParkComponents/ui";
+import {useTranslation} from "react-i18next";
 
 export const Detail: React.FC = () => {
     const shoppingListActionsRef = useRef<IShoppingListActionModalsRef>(null);
     const shoppingListMemberDrawerRef = useRef<IMemberListRef>(null);
     const navigate = useNavigate();
+    const {t} = useTranslation('shopping-list');
     const {id} = useParams();
     const {user} = useAuth();
 
@@ -59,21 +61,21 @@ export const Detail: React.FC = () => {
                         className={css({flexGrow: 1})}
                 >
                     <CheckmarkCircle02Icon size={24} strokeWidth={2}/>
-                    Dokončit
+                    {t('actions.closeList')}
                 </Button>
                 <Menu
                     items={[
                         {
-                            type: 'item', id: 'show-members', text: 'Upravit členy', icon: <UserGroupIcon/>,
+                            type: 'item', id: 'show-members', text: t('detail.members.action'), icon: <UserGroupIcon/>,
                             onClick: () => shoppingListMemberDrawerRef.current?.openDrawer()
                         },
                         { type: 'separator', id: 'sep' },
                         {
-                            type: 'item', id: 'edit', text: 'Upravit', icon: <PencilEdit01Icon/>,
+                            type: 'item', id: 'edit', text: t('actions.editList'), icon: <PencilEdit01Icon/>,
                             onClick: () => shoppingListActionsRef.current?.openEditModal(shoppingList)
                         },
                         {
-                            type: 'item', id: 'delete', text: 'Odstranit', icon: <Delete02Icon/>,
+                            type: 'item', id: 'delete', text: t('actions.deleteList'), icon: <Delete02Icon/>,
                             onClick: () => shoppingListActionsRef.current?.openDeleteConfirmModal(
                                 shoppingList, () => navigate('/')
                             )
@@ -90,7 +92,7 @@ export const Detail: React.FC = () => {
                        variant="subtle" className={css({flexGrow: 1})}
         >
             <HugeIcon icon={<Door01Icon/>}/>
-            Opustit seznam
+            {t('actions.leaveList')}
         </Button>
     }
 
@@ -109,23 +111,23 @@ export const Detail: React.FC = () => {
                     </Box>
                     <VStack gap='4' alignItems={'flex-start'} py={{ base: 0, md: 4 }} px={{ base: 4, md: 0 }}>
                         <InformationRow
-                            title='Vytvořeno uživatelem' data={fullName(shoppingList.author)}
+                            title={t('detail.stats.createdBy')} data={fullName(shoppingList.author)}
                             icon={<UserEdit01Icon size={28} strokeWidth={2}/>}
                         />
                         <InformationRow
-                            title='Naposledy aktualizováno' data={format(shoppingList.updated_at, 'd. L. y')}
+                            title={t('detail.stats.lastUpdated')} data={format(shoppingList.updated_at, 'd. L. y')}
                             icon={<CalendarSetting01Icon size={28} strokeWidth={2}/>}
                         />
                         <InformationRow
-                            title={completed ? 'Počet položek' : 'Počet položek / hotové položky'}
+                            title={t('detail.stats.itemCombinedStat')}
                             data={completed
-                                ? `${shoppingList.stats.total_items} položek`
-                                : `${shoppingList.stats.total_items} položek / ${shoppingList.stats.completed_items} hotových položek`
+                                ? t('common.itemCount', { count: shoppingList.stats.total_items })
+                                : `${t('common.itemCount', { count: shoppingList.stats.total_items })} / ${t('detail.stats.itemCountCompleted', { count: shoppingList.stats.completed_items })}`
                             }
                             icon={<CheckListIcon/>}
                         />
                         <InformationRow
-                            title={completed ? 'Dokončeno' : 'Dokončit nákup před'}
+                            title={completed ? t('detail.stats.completedAt') : t('detail.stats.completeBy')}
                             data={format(completed ? shoppingList.closed_at! : shoppingList.complete_by, 'd. L. y')}
                             icon={<CalendarCheckOut01Icon/>}
                             state={!completed && isBefore(shoppingList.complete_by, new Date()) ? 'error' : 'default'}

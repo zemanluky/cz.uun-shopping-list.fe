@@ -19,6 +19,7 @@ import {addListMemberMutator, updateMemberPermissionMutator} from "../../../data
 import {Input} from "@ParkComponents/ui/Input.tsx";
 import {toaster} from "@Components/layout/Toaster.tsx";
 import {TShoppingListDetail} from "../../../types/shopping-list.ts";
+import {useTranslation} from "react-i18next";
 
 interface IProps {
     shoppingList: TShoppingListDetail,
@@ -37,15 +38,11 @@ export interface IMemberModalRef {
     openModal: (member?: TShoppingListMember|null, onSave?: VoidFunction|null, onCancel?: VoidFunction|null) => void
 }
 
-const memberPermissionOptions: Array<IAutocompleteOption<EShoppingListMemberPermission>> = [
-    { value: EShoppingListMemberPermission.read, label: "Čtení - může odškrtávat položky" },
-    { value: EShoppingListMemberPermission.write, label: "Zápis - může přidávat a odškrtávat položky" },
-]
-
 export const MemberModal = forwardRef<IMemberModalRef,IProps>(({shoppingList}, ref) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [userSearch, setUserSearch] = useState<string|null>(null);
     const [member, setMember] = useState<TShoppingListMember|null>(null);
+    const {t} = useTranslation('shopping-list');
 
     const onSaveRef = useRef<VoidFunction|null>(null);
     const onCancelRef = useRef<VoidFunction|null>(null);
@@ -110,7 +107,10 @@ export const MemberModal = forwardRef<IMemberModalRef,IProps>(({shoppingList}, r
         },
         [users]
     );
-    const permissionOptions = useMemo(() => memberPermissionOptions, []);
+    const permissionOptions = useMemo<Array<IAutocompleteOption<EShoppingListMemberPermission>>>(() => ([
+        { value: EShoppingListMemberPermission.read, label: t('detail.members.permission.read') },
+        { value: EShoppingListMemberPermission.write, label: t('detail.members.permission.write') },
+    ]), []);
 
     /**
      * Cancel the adding or editing of the member.
@@ -159,7 +159,12 @@ export const MemberModal = forwardRef<IMemberModalRef,IProps>(({shoppingList}, r
         <Dialog isOpen={isOpen} onExitComplete={resetDialog}>
             <Form<IFormType> onSubmit={submit} ref={formRef}>
                 {({submit, isValid}) => (<>
-                    <DialogHeading heading={member !== null ? "Úprava práv člena" : "Přidání člena"} onCancel={cancel}/>
+                    <DialogHeading
+                        heading={member !== null
+                            ? t('detail.members.modal.editMemberPermissionsTitle')
+                            : t('detail.members.modal.addMemberTitle')
+                        }
+                       onCancel={cancel}/>
                     <DialogContent>
                         <form className={css({width: "100%"})} onSubmit={(e) => {
                             e.preventDefault();
@@ -174,7 +179,7 @@ export const MemberModal = forwardRef<IMemberModalRef,IProps>(({shoppingList}, r
                                         resetWithValue={null}
                                     >
                                         {({errors, value, setValue}) => (
-                                            <Field label="Uživatel" errors={errors} type="any">
+                                            <Field label={t('detail.members.inputs.user')} errors={errors} type="any">
                                                 <AutocompleteInput
                                                     options={userOptions}
                                                     value={value ?? null}
@@ -197,7 +202,7 @@ export const MemberModal = forwardRef<IMemberModalRef,IProps>(({shoppingList}, r
                                     initialValue={member?.permission ?? undefined}
                                 >
                                     {({errors, value, setValue}) => (
-                                        <Field label="Oprávnění uživatele" errors={errors} type="any">
+                                        <Field label={t('detail.members.inputs.permission')} errors={errors} type="any">
                                             <AutocompleteInput
                                                 value={value}
                                                 options={permissionOptions}
@@ -210,14 +215,14 @@ export const MemberModal = forwardRef<IMemberModalRef,IProps>(({shoppingList}, r
                     </DialogContent>
                     <DialogButtons buttons={[
                         <Button variant='subtle' onClick={cancel} disabled={isAddingUser || isUpdatingPermission}>
-                            Zrušit
+                            {t('cancel', { ns: 'common' })}
                         </Button>,
                         <Button
                             onClick={() => submit()}
                             disabled={!isValid || isAddingUser || isUpdatingPermission}
                             loading={isAddingUser || isUpdatingPermission}
                         >
-                            {member !== null ? "Uložit změny" : "Přidat člena"}
+                            {member !== null ? t('save', { ns: 'common' }) : t('detail.members.actions.addMemberPrompt')}
                         </Button>
                     ]}/>
                 </>)}

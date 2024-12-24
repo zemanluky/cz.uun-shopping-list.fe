@@ -6,6 +6,7 @@ import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 import {Cancel01Icon, CheckmarkCircle02Icon, UnfoldLessIcon, UnfoldMoreIcon} from "hugeicons-react";
 import {flex} from "../../../../styled-system/patterns";
 import {Box} from "../../../../styled-system/jsx";
+import {useTranslation} from "react-i18next";
 
 export interface IAutocompleteOption<TValueType extends string|number> {
     /** Value of the option. */
@@ -42,6 +43,7 @@ export function AutocompleteInput<TValueType extends string|number = string>({va
     const isSearchedExternally = useMemo(() => !!onSearchChange, [onSearchChange]);
     const [search, setSearch] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const {t} = useTranslation('common');
 
     /** filtered options when the internal search logic is used */
     const filteredOptions: Array<IAutocompleteOption<TValueType>> = useMemo(() => {
@@ -128,7 +130,7 @@ export function AutocompleteInput<TValueType extends string|number = string>({va
                        onFocus={() => clearSearch()}
                        onBlur={() => setSelectedOptionSearch()}
                        onChange={(e) => handleSearch({inputValue: e.target.value})}
-                       placeholder={placeholder ?? 'Vyberte možnost nebo vyhledejte...'}
+                       placeholder={placeholder ?? t('inputs.autocompleteInputPlaceholder')}
                 />
             </Combobox.Input>
             <Combobox.Trigger asChild>

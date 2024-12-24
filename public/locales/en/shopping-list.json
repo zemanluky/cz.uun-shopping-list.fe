@@ -1,0 +1,96 @@
+{
+  "actions": {
+    "newList": "New shopping list",
+    "editList": "Edit shopping list",
+    "deleteList": "Delete shopping list",
+    "closeList": "Complete shopping list",
+    "leaveList": "Leave shopping list"
+  },
+  "list": {
+    "pageTitle": "Your shopping lists",
+    "filter": {
+      "sectionTitle": "Filters",
+      "modal": {
+        "trigger": "Modify filters",
+        "hint": "Filters that you set here are applied immediately."
+      },
+      "label": {
+        "search": "Search by name",
+        "completeBy": "Complete by date",
+        "showCompleted": "Show completed"
+      },
+      "placeholder": {
+        "search": "Weekend party...",
+        "completeBy": "Select completion date"
+      },
+      "tabs": {
+        "all": "All shopping lists",
+        "own": "My own lists",
+        "shared": "Lists shared with me"
+      }
+    }
+  },
+  "common": {
+    "photoHint": "Illustrative photo of the shopping list",
+    "nameHint": "Shopping list's name",
+    "itemCount_zero": "No items",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items"
+  },
+  "card": {
+    "itemCountCompleted": "{{count}} completed",
+    "completeBy": "Complete before {{date}}",
+    "completedAt": "Completed at {{date}}",
+    "createdBy": "Created by",
+    "showDetail": "Go to detail"
+  },
+  "detail": {
+    "stats": {
+      "itemCombinedStat": "Items / Completed items",
+      "itemCountCompleted_zero": "No completed items",
+      "itemCountCompleted_one": "{{count}} completed item",
+      "itemCountCompleted_other": "{{count}} completed items",
+      "completeBy": "Complete the shopping list before",
+      "completedAt": "Completed at",
+      "lastUpdated": "Last updated at",
+      "createdBy": "Created by"
+    },
+    "items": {
+      "sectionTitle": "Items",
+      "showCompleted": "Show completed items",
+      "amountPlaceholder": "Amount",
+      "namePlaceholder": "Name",
+      "addItem": "Add item",
+      "editItem": "Edit item",
+      "deleteItem": "Remove item",
+      "markItemCompleted": "Mark as completed or bought",
+      "completedBy": "{{user}} completed this item"
+    },
+    "members": {
+      "action": "Manage list members",
+      "sectionTitle": "List members",
+      "sectionPrompt": "Here you may manage the members of the shopping list. You can add new members, edit their permissions or remove them from the list.",
+      "permission": {
+        "read": "May read and mark items as completed",
+        "write": "May read, add and mark items as completed"
+      },
+      "inputs": {
+        "user": "User",
+        "permission": "User's permission"
+      },
+      "modal": {
+        "addMemberTitle": "Add member to list",
+        "editMemberPermissionsTitle": "Change member's permissions",
+        "deleteTitle": "Remove member from list",
+        "deleteDescription": "Once you remove this member from the shopping list, they will lose access to the items and the list itself. If you would like this user to have access to this list again, you will have to invite them again."
+      },
+      "actions": {
+        "addMemberPrompt": "Add member",
+        "editMemberPermissionsPrompt": "Change permissions",
+        "deleteMember": "Remove member",
+        "confirmDeleteMember": "Yes, I want to remove this member",
+        "rejectDeleteMember": "No, I want to keep this member's access"
+      }
+    }
+  }
+}

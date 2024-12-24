@@ -5,16 +5,19 @@ import {Container, Grid} from "../../../styled-system/jsx";
 import {RouterTabs} from "@Components/ui/RouterTabs.tsx";
 import {Outlet} from "react-router-dom";
 import {useMemo} from "react";
+import {useTranslation} from "react-i18next";
 
 export const ProfilePage: React.FC = () => {
+    const {t} = useTranslation();
+
     const tabs = useMemo(() => ([
         { label: 'Tvoje profilové informace', link: 'info' },
-        { label: 'Nastavení aplikace', link: 'app-settings' },
+        { label: t('settings.app.title'), link: 'app-settings' },
     ]), []);
 
     return <AuthenticatedRoute>
         <PageHeader
-            title="Tvůj profil"
+            title={t('settings.pageTitle')}
             previousLink={true}
         />
         <Container maxW='6xl' mt='8'>

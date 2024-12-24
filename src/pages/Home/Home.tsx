@@ -10,22 +10,24 @@ import {ShoppingListFilters, TShoppingListFilters} from "@Components/features/Sh
 import {AuthenticatedRoute} from "@Components/guard";
 import {css} from "../../../styled-system/css";
 import {EShoppingListView} from "../../types/shopping-list.ts";
+import {useTranslation} from "react-i18next";
 
 export const Homepage: React.FC = () => {
     const [filters, setFilters] = useState<TShoppingListFilters>({
         search: null, showCompleted: false, completeBefore: null, includeOnly: EShoppingListView.all
     });
     const [isValidating, setIsValidating] = useState<boolean>(false);
+    const { t } = useTranslation('shopping-list');
 
     const shoppingListModalRef = useRef<IShoppingListModalRef>(null);
 
     return <AuthenticatedRoute>
         <PageHeader
-            title="Tvoje nákupní seznamy"
+            title={t('list.pageTitle')}
             actions={
                 <Button size='xl' onClick={() => shoppingListModalRef.current?.openModal()} className={css({ flexGrow: 1 })}>
                     <AddCircleIcon size={24} strokeWidth={2}/>
-                    Nový nákupní seznam
+                    {t('actions.newList')}
                 </Button>
             }
             validating={isValidating}

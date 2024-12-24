@@ -12,6 +12,7 @@ import {EShoppingListView} from "../../../types/shopping-list.ts";
 import {HugeIcon} from "@Components/ui/HugeIcon.tsx";
 import {FilterIcon} from "hugeicons-react";
 import {Dialog, DialogButtons, DialogContent, DialogHeading} from "@Components/ui/Dialog";
+import {useTranslation} from "react-i18next";
 
 export type TShoppingListFilters = {
     search: string|null;
@@ -33,6 +34,7 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
         showCompleted: false,
         includeOnly: EShoppingListView.all
     });
+    const {t} = useTranslation('shopping-list');
 
     const debounceFilterChange = useMemo(() => R.debounce(onFilterChange, {waitMs: 300, timing: "trailing"}), []);
 
@@ -93,13 +95,13 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
      */
     const renderFilters = (renderForModal: boolean = false): React.ReactNode => {
         return <>
-            <Field label="Vyhledat" w="100%">
+            <Field label={t('list.filter.label.search')} w="100%">
                 <Input
                     value={search || ''}
-                    placeholder="Víkendový feast..."
+                    placeholder={t('list.filter.placeholder.search')}
                     onChange={(e) => changeFilter('search', e.target.value.length ? e.target.value : null)}/>
             </Field>
-            <Field label="Dokončit před" w="100%">
+            <Field label={t('list.filter.label.completeBy')} w="100%">
                 <SingleDateInput
                     value={completeBefore}
                     onChange={(newDate) => changeFilter('completeBefore', newDate)}
@@ -111,7 +113,7 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
                     checked={showCompleted}
                     onCheckedChange={() => changeFilter('showCompleted', !showCompleted)}
                 >
-                    Zobrazit hotové
+                    {t('list.filter.label.showCompleted')}
                 </Checkbox>
             </Field>
         </>
@@ -119,10 +121,10 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
 
     return <VStack {...vStackProps} alignItems="flex-start" w="100%" gap="4">
         <HStack justifyContent="space-between" w="100%">
-            <Heading as={'h4'} gridColumn="1/4" fontSize="xl">Filtry</Heading>
+            <Heading as={'h4'} gridColumn="1/4" fontSize="xl">{t('list.filter.sectionTitle')}</Heading>
             <Button variant="outline" display={{ base: 'flex', md: 'none' }} onClick={() => setFilterDialogOpen(true)}>
                 <HugeIcon icon={<FilterIcon/>}/>
-                Upravit filtraci
+                {t('list.filter.modal.trigger')}
             </Button>
         </HStack>
         <Grid
@@ -138,9 +140,9 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
         </Grid>
         <SegmentGroup
             items={[
-                { id: EShoppingListView.all, label: 'Všechny seznamy' },
-                { id: EShoppingListView.own, label: 'Moje seznamy' },
-                { id: EShoppingListView.shared, label: 'Seznamy kamarádů' },
+                { id: EShoppingListView.all, label: t('list.filter.tabs.all') },
+                { id: EShoppingListView.own, label: t('list.filter.tabs.own') },
+                { id: EShoppingListView.shared, label: t('list.filter.tabs.shared') },
             ]}
             orientation="horizontal"
             activeItem={includeOnly}
@@ -150,14 +152,14 @@ export const ShoppingListFilters: React.FC<IProps> = ({onFilterChange, ...vStack
             mt={2}
         />
         <Dialog isOpen={isFilterDialogOpen}>
-            <DialogHeading heading="Filtry" onCancel={() => setFilterDialogOpen(false)}/>
+            <DialogHeading heading={t('list.filter.sectionTitle')} onCancel={() => setFilterDialogOpen(false)}/>
             <DialogContent>
                 <VStack alignItems="flex-start" w="100%" gap={4}>
-                    <Text>Filtry, které zde nastavíte, jsou ihned aplikovány.</Text>
+                    <Text>{t('list.filter.modal.hint')}</Text>
                     {renderFilters(true)}
                 </VStack>
             </DialogContent>
-            <DialogButtons buttons={[ <Button onClick={() => setFilterDialogOpen(false)}>Zavřít</Button> ]}/>
+            <DialogButtons buttons={[ <Button onClick={() => setFilterDialogOpen(false)}>{t('close', { ns: 'common' })}</Button> ]}/>
         </Dialog>
     </VStack>
 }

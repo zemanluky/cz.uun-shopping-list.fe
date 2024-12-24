@@ -98,6 +98,8 @@ export const ShoppingListGrid: React.FC<IProps> = ({filter, onViewValidation, ..
             <Skeleton minH="250px"></Skeleton>
             <Skeleton minH="250px"></Skeleton>
             <Skeleton minH="250px"></Skeleton>
+            <Skeleton minH="250px"></Skeleton>
+            <Skeleton minH="250px"></Skeleton>
         </Grid>
     }
 

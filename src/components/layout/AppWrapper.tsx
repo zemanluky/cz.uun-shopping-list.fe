@@ -1,5 +1,5 @@
 import React from "react";
-import {EAuthStatus, useAuth} from "src/contexts";
+import {EAuthStatus, useAuth, useLanguage} from "src/contexts";
 import {Outlet} from "react-router-dom";
 import {Center} from "../../../styled-system/jsx";
 import {Spinner} from "@ParkComponents/ui";
@@ -15,8 +15,9 @@ const appStyles = css({
 
 export const AppWrapper: React.FC = () => {
     const {authState} = useAuth();
+    const {isLoading} = useLanguage();
 
-    if (authState === EAuthStatus.Loading)
+    if (authState === EAuthStatus.Loading || isLoading)
         return <Center bg="accent.2" className={appStyles}>
             <Spinner size="xl" borderWidth="4"/>
         </Center>;

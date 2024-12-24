@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {createContext, useContext, useEffect, useState} from "react";
 import {getPreferredLanguage, setPreferredLanguage} from "@Utils/local-storage.utils.ts";
+import { useTranslation } from 'react-i18next';
 
 export enum ELanguage {
     Czech = "cs",
@@ -18,16 +19,25 @@ interface ILanguageContext {
      * @param lang
      */
     setLanguage: (lang: ELanguage) => void;
+
+    /**
+     * Indicates the language set is being loaded or changed.
+     */
+    isLoading: boolean;
 }
 
 const LanguageContext = createContext<ILanguageContext|undefined>(undefined);
 
 export const LanguageProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-    const [language, setLanguage] = useState<ELanguage>(ELanguage.Czech);
+    const [language, setLanguage] = useState<ELanguage|null>(null);
+    const [isChangingLanguage, setIsChangingLanguage] = useState<boolean>(false);
+    const { i18n: { changeLanguage }, ready } = useTranslation(['common', 'shopping-list']);
 
     // load the last setting from local storage, if exists
     useEffect(() => {
         const preferredLanguage = getPreferredLanguage();
+
+        console.log(preferredLanguage);
 
         if (preferredLanguage) {
             setLanguage(preferredLanguage);
@@ -49,10 +59,20 @@ export const LanguageProvider: React.FC<{children: React.ReactNode}> = ({ childr
         }
     }, []);
 
-    // save the updated language setting to local storage
-    useEffect(() => setPreferredLanguage(language), [language]);
+    // save the updated language setting to local storage and update the language on i18n instance
+    useEffect(() => {
+        if (language) {
+            setIsChangingLanguage(true);
+            setPreferredLanguage(language);
+            changeLanguage(language).then(() => setIsChangingLanguage(false));
+        }
+    }, [language]);
 
-    return <LanguageContext.Provider value={{language, setLanguage}}>
+    return <LanguageContext.Provider value={{
+        isLoading: !ready || isChangingLanguage || language === null,
+        language: language ?? ELanguage.Czech,
+        setLanguage
+    }}>
         {children}
     </LanguageContext.Provider>;
 };

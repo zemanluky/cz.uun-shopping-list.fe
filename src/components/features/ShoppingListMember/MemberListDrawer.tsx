@@ -13,6 +13,7 @@ import {apiRoutes} from "../../../config/api/routes.ts";
 import {removeMemberMutator} from "../../../data/mutator/shopping-list-member.ts";
 import {toaster} from "@Components/layout/Toaster.tsx";
 import { fullName } from "@Utils/user.helper.ts";
+import {useTranslation} from "react-i18next";
 
 export interface IMemberListRef {
     openDrawer: () => void
@@ -28,6 +29,7 @@ interface IMemberListProps {
 export const MemberListDrawer = forwardRef<IMemberListRef,IMemberListProps>(
     ({members, shoppingList, readOnly, canEdit = false}, ref) => {
         const [isOpen, setIsOpen] = useState<boolean>(false);
+        const {t} = useTranslation('shopping-list');
 
         const memberModalRef = useRef<IMemberModalRef>(null);
         const removeMemberModalRef = useRef<IConfirmationDialogRef>(null);
@@ -75,7 +77,8 @@ export const MemberListDrawer = forwardRef<IMemberListRef,IMemberListProps>(
 
         return <>
             <Drawer isOpen={isOpen}>
-                <DrawerHeading heading="Členové seznamu" onCancel={() => setIsOpen(false)} description="Tady můžete přidat nebo upravit stávající členy seznamu."/>
+                <DrawerHeading heading={t('detail.members.sectionTitle')} onCancel={() => setIsOpen(false)}
+                               description={t('detail.members.sectionPrompt')}/>
                 <DrawerContent>
                     {members.length > 0
                         ? members.map(member => <MemberListItem
@@ -87,21 +90,23 @@ export const MemberListDrawer = forwardRef<IMemberListRef,IMemberListProps>(
                 </DrawerContent>
                 {canEdit && <DrawerButtons buttons={[
                     <Button onClick={() => setIsOpen(false)} variant="subtle">
-                        Zpět
+                        {t('back', { ns: 'common' })}
                     </Button>,
                     <Button onClick={() => openMemberModal()}>
                         <HugeIcon icon={<UserAdd01Icon/>} />
-                        Přidat člena
+                        {t('detail.members.actions.addMemberPrompt')}
                     </Button>
                 ]}/>}
             </Drawer>
             <MemberModal ref={memberModalRef} shoppingList={shoppingList}/>
             <ConfirmationDialog
                 ref={removeMemberModalRef}
-                title="Opravdu chcete člena odebrat?"
-                description="Odstraněním člena z nákupního seznamu uživatel ztratí přístup k seznamu a jeho položkám.
-                    Pokud mu budete chtít tyto informace znovu zpšístupnit, budete ho muset přidat znovu."
-                prompts={{ confirm: "Ano, chci člena odebrat", cancel: "Ne, chci členovi nechat přístup" }}
+                title={t('detail.members.modal.deleteTitle')}
+                description={t('detail.members.modal.deleteDescription')}
+                prompts={{
+                    confirm: t('detail.members.actions.confirmDeleteMember'),
+                    cancel: t('detail.members.actions.rejectDeleteMember')
+                }}
                 autoClose={false}
                 processing={isRemovingMember}
             />
